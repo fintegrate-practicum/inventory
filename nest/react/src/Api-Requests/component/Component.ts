@@ -1,22 +1,22 @@
 import axios from 'axios';
-import {baseUrl} from '../config';
+import dotenv from 'dotenv';
+dotenv.config();
+const baseUrl=process.env.BASEURL;
+const componentUrl=process.env.COMPONENTURL; 
 
-//administrator permissions
 export const deleteComponent=(componentId:number):Promise<void>=>{
-    return axios.delete(`${baseUrl}/api/inventory/${componentId}`);
+    return axios.delete(`${baseUrl}/${componentUrl}/${componentId}`);
 }
 
 export const addComponent=(component:any)=>{
-    return axios.post(`${baseUrl}/api/inventory`,component);
+    return axios.post(`${baseUrl}/${componentUrl}`,component);
 }
 
 
 export const updateComponent=(componentId:number,component:any)=>{
-    return axios.put(`${baseUrl}/api/inventory/${componentId}`,component);
+    return axios.put(`${baseUrl}/${componentUrl}/${componentId}`,component);
 }
 
-//client permissions
-
 export const updateQuantityComponent=(componentId:number,count:number)=>{
-    return axios.put(`${baseUrl}/api/inventory/${componentId}`,count);
+    return axios.put(`${baseUrl}/${componentUrl}/${componentId}`,count);
 }
