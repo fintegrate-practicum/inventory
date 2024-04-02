@@ -1,21 +1,20 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
-const baseUrl=process.env.BASEURL;
-const providerUrl=process.env.PROVIDERURL;
+const baseUrl=process.env.BASE_URL;
 
 export const getAllProviders=(businessId:number)=>{
-    return axios.get(`${baseUrl}/${providerUrl}/${businessId}`);
+    return axios.get(`${baseUrl}/providers/${businessId}`);
 }
 
 export const deleteProvider=(providerId:number):Promise<void>=>{
-    return axios.delete(`${baseUrl}/${providerUrl}/${providerId}`);
+    return axios.delete(`${baseUrl}/providers/${providerId}`);
 }
 
 export const addProvider=(provider:any)=>{
-    return axios.post(`${baseUrl}/${providerUrl}`,provider);
+    return axios.post(`${baseUrl}/providers`,provider);
 }
 
 export const updateProvider=(providerId:number,provider:any)=>{
-    return axios.put(`${baseUrl}/${providerUrl}/${providerId}`,provider);
+    return axios.put(`${baseUrl}/providers/${providerId}`,provider);
 }
