@@ -1,32 +1,37 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
-const baseUrl=process.env.BASE_URL;
-
-export const getAllProductsAdmin=(adminId:number)=>{
-    return axios.get(`${baseUrl}/product/${adminId}`);
+const config = {
+    baseURL: process.env.BASE_URL
 }
 
-export const deleteProduct=(productId:number):Promise<void>=>{
-    return axios.delete(`${baseUrl}/product/${productId}`);
+export const getAllProductsAdmin = (adminId: number): Promise<any> => {
+    return axios.get(`/product/${adminId}`, config);
 }
 
-export const addProduct=(product:any)=>{
-    return axios.post(`${baseUrl}/product`,product);
+export const deleteProduct = (productId: number): Promise<any> => {
+    return axios.delete(`/product/${productId}`, config);
 }
 
-export const updateProduct=(productId:number,product:any)=>{
-    return axios.put(`${baseUrl}/product/${productId}`,product);
+export const addProduct = (product: any): Promise<any> => {
+    return axios.post(`/product`, product, config);
 }
 
-export const updateProductsPrice=(adminId:number,percent:number):Promise<void>=>{
-    return axios.put(`${baseUrl}/product/${adminId}`,percent);
+export const updateProduct = (productId: number, product: any): Promise<any> => {
+    return axios.put(`/product/${productId}`, product, config);
 }
 
-export const getAllProductsCustomer=(businessId:number)=>{
-    return axios.get(`${baseUrl}/product/${businessId}`);
+export const updateProductsPrice = (adminId: number, percent: number): Promise<any> => {
+    const data = {
+        percent,
+    };
+    return axios.put(`/product/${adminId}`, data, config);
 }
 
-export const getAllProductById=(productId:number)=>{
-    return axios.get(`${baseUrl}/product/${productId}`);
+export const getAllProductsCustomer = (businessId: number): Promise<any> => {
+    return axios.get(`/product/${businessId}`, config);
+}
+
+export const getProductById = (productId: number): Promise<any> => {
+    return axios.get(`/product/${productId}`, config);
 }
