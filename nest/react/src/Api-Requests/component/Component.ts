@@ -1,23 +1,18 @@
-import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config();
-const config = {
-    baseURL: process.env.BASE_URL
-}
+import httpSrvice from "../httpSrvice";
 
 export const deleteComponent = (componentId: number): Promise<any> => {
-    return axios.delete(`/component/${componentId}`, config);
+    return httpSrvice.delete(`/component/${componentId}`);
 }
 
 export const addComponent = (component: any): Promise<any> => {
-    return axios.post(`/component`, component, config);
+    return httpSrvice.post(`/component`, component);
 }
 
 
 export const updateComponent = (componentId: number, component: any): Promise<any> => {
-    return axios.put(`/component/${componentId}`, component, config);
+    return httpSrvice.put(`/component/${componentId}`, component);
 }
 
 export const updateQuantityComponent = (componentId: number, count: number): Promise<any> => {
-    return axios.put(`/component/${componentId}`, count, config);
+    return httpSrvice.put(`/component/${componentId}`, count);
 }

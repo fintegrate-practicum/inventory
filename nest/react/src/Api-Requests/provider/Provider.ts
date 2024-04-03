@@ -1,22 +1,17 @@
-import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config();
-const config = {
-    baseURL: process.env.BASE_URL
-}
+import httpSrvice from "../httpSrvice";
 
 export const getAllProviders = (businessId: number): Promise<any> => {
-    return axios.get(`/providers/${businessId}`, config);
+    return httpSrvice.get(`/providers/${businessId}`);
 }
 
 export const deleteProvider = (providerId: number): Promise<any> => {
-    return axios.delete(`/providers/${providerId}`, config);
+    return httpSrvice.delete(`/providers/${providerId}`);
 }
 
 export const addProvider = (provider: any): Promise<any> => {
-    return axios.post(`/providers`, provider, config);
+    return httpSrvice.post(`/providers`, provider);
 }
 
 export const updateProvider = (providerId: number, provider: any): Promise<any> => {
-    return axios.put(`/providers/${providerId}`, provider, config);
+    return httpSrvice.put(`/providers/${providerId}`, provider);
 }
