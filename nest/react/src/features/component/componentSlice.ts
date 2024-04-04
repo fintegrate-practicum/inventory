@@ -1,38 +1,18 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { createSlice } from "@reduxjs/toolkit";
+import { deleteItem,setData,addItem,updateItem } from "../../app/actions";
 
 const initialState = {
-    componentsArr: []
+    data: []
 };
 
 const componentSlice = createSlice({
     name: "component",
     initialState,
     reducers: {
-
-        deleteComponent: (state, action: PayloadAction<number>) => {
-
-            state.componentsArr = state.componentsArr.filter(item => item.id !== action.payload);
-
-        },
-        addComponent: (state, action) => {
-
-            state.componentsArr = [...state.componentsArr, action.payload];
-
-        },
-        getAllComponents:(state, action)=>{
-        
-            state.componentsArr = action.payload;
-
-        },
-        updateComponent: (state, action) => {
-            const updatedIndex = state.componentsArr.findIndex(item => item.id === action.payload.id);
-            if (updatedIndex !== -1) {
-                state.componentsArr[updatedIndex] = action.payload;
-            }
-        }
-
-
+        deleteComponent:deleteItem,
+        addComponent: addItem,
+        getAllComponents:setData,
+        updateComponent:updateItem
     }
 });
 

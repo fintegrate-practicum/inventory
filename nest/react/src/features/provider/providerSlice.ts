@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { createSlice } from "@reduxjs/toolkit";
+import { deleteItem,setData,addItem,updateItem } from "../../app/actions";
 
 const initialState = {
-    providersArr: []
+    data: []
 };
 
 const providerSlice = createSlice({
@@ -10,29 +10,10 @@ const providerSlice = createSlice({
     initialState,
     reducers: {
 
-        deleteProvider: (state, action: PayloadAction<number>) => {
-
-            state.providersArr = state.providersArr.filter(item => item.id !== action.payload);
-
-        },
-        addProvider: (state, action) => {
-
-            state.providersArr = [...state.providersArr, action.payload];
-
-        },
-        getAllProviders:(state, action)=>{
-        
-            state.providersArr = action.payload;
-
-        },
-        updateProvider: (state, action) => {
-            const updatedIndex = state.providersArr.findIndex(item => item.id === action.payload.id);
-            if (updatedIndex !== -1) {
-                state.providersArr[updatedIndex] = action.payload;
-            }
-        }
-
-
+        deleteProvider:deleteItem,
+        addProvider: addItem,
+        getAllProviders:setData,
+        updateProvider:updateItem
     }
 });
 
