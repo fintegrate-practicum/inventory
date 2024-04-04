@@ -28,15 +28,15 @@ export class ProductService {
     }
 
     
-    const newProduct = this.productRepository.create(productData);
+    const newProduct = this.ProductRepository.create(productData);
 
    
-    const savedProduct = await this.productRepository.save(newProduct);
+    const savedProduct = await this.ProductRepository.save(newProduct);
 
     return savedProduct;
   }
   async getProductsByManagerId(managerId: string): Promise<Product[]> {
-    const products = await this.productRepository.find({ where: { managerId: managerId } });
+    const products = await this.ProductRepository.find({ where: { managerId: managerId } });
 
     if (!products || products.length === 0) {
       throw new NotFoundException('No products found for the provided manager ID.');
@@ -51,19 +51,19 @@ export class ProductService {
     }
 
     
-    const managerProducts = await this.productRepository.find({ where: { managerId } });
+    const managerProducts = await this.ProductRepository.find({ where: { managerId } });
 
     
     await Promise.all(managerProducts.map(async (product) => {
       product.salePercentage = newSalePercentage;
-      return this.productRepository.save(product);
+      return this.ProductRepository.save(product);
     }));
   }
  
 
 
   async getProductsForSaleByCompany(companyId: string): Promise<any[]> {
-    const products = await this.productRepository.find({
+    const products = await this.ProductRepository.find({
       where: { companyId: companyId, stockQuantity: MoreThan(0) },
       select: ['productName', 'price', 'description', 'isOnSale', 'salePercentage', 'stockQuantity'],
     });

@@ -1,4 +1,5 @@
 import { Injectable ,ForbiddenException,BadRequestException,NotFoundException} from '@nestjs/common';
+דד
 
 @Injectable()
 export class ComponentService { 

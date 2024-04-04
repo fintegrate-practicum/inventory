@@ -1,8 +1,9 @@
-import { Controller,Param,Delete, Post, Put } from '@nestjs/common';
+import { Controller,Param,Delete, Post, Put,Body } from '@nestjs/common';
+import { ComponentService } from './component.service';
 
-@Controller('component')
+@Controller('api/inventory/component')
 export class ComponentController {
-    constructor(private readonly componentService: componentService) {}
+    constructor(private readonly componentService: ComponentService) {}
 
  @Delete(':componentId')
   async softDeleteComponent(@Param('componentId') componentId: string, eraserId: string) {
@@ -11,14 +12,14 @@ export class ComponentController {
   } 
 
   @Post()
-  async addNewProvider(@Body()newComponent:any){
-    await  this.componentService.addNewComponent(newComponent);
+  async addNewProvider(@Body()newComponent:any,userId:string){
+    await  this.componentService.addNewComponent(newComponent,userId);
     return { message: 'Component  added successfully' };
   }
   @Put(':componentId')
   
   updateStockQuantityupdateStockQuantity(@Param('componentId') componentId: string,newQuantity: number, userId: string){
-return this.componentService.updateStockQuantity();
+return this.componentService.updateStockQuantity(componentId,newQuantity,userId);
   }
 
 }
