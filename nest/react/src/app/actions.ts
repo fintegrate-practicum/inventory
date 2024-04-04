@@ -13,7 +13,7 @@ export const deleteItem = (state:any, action:PayloadAction<{ [key: string]: any 
   };
   
 
-  export const updateItem = (state: any, action: { payload: { [key: string]: any } }) => {
+  export const updateItem = (state: any, action:PayloadAction<{ [key: string]: any }>) => {
     const updatedIndex = state.data.findIndex((item: { [key: string]: any }) => item.id === action.payload.id);
     if (updatedIndex !== -1) {
         const updatedData = [...state.data];
