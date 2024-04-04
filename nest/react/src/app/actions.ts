@@ -1,6 +1,6 @@
 import {  PayloadAction } from "@reduxjs/toolkit"
 
-export const deleteItem = (state:any, action:{payload: { [key: string]: any } }) => {
+export const deleteItem = (state:any, action:PayloadAction<{ [key: string]: any }>) => {
     state.data = state.data.filter((item: { [key: string]: any })  => item.id !== action.payload);
   };
   
