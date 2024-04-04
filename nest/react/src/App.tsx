@@ -1,33 +1,33 @@
+
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import AllProducts from './components/AllProducts';
 
 function App() {
-  const [count, setCount] = useState(0)
+   interface Component {
+    //בשביל התחלה....
+    name: string;
+    price: number;
+
+  }
+  
+interface Product {
+  //בשביל התחלה....
+ name:string,
+ price:number,
+ count:number,
+ component:Component[]
+
+}
+ const  [arrInventory,setArrInventory]=useState<Product[]>([
+  {name:"table",price:180,count:40,component:[{name:"table leg",price:10},{name:"table leg",price:10}]},
+  {name:"chair",price:140,count:30,component:[{name:"table leg",price:10},{name:"table leg",price:10}]},
+  {name:"desk",price:150,count:20,component:[{name:"table leg",price:10},{name:"table leg",price:10}]},
+ ])
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <AllProducts arrInventory={arrInventory}/>
     </>
   )
 }
