@@ -18,10 +18,10 @@ COPY . .
 #
 RUN  npm run build
 # Expose the port Vite serves the application on
-EXPOSE 3000
+EXPOSE 5173
 
 # Run the Vite server when the container starts
-CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "preview"]
 
 
 
