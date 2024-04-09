@@ -32,6 +32,10 @@ export class ComponentService {
     return savedElement;
   }
 
+  async getAllComponents(): Promise<any[]> {
+    const components = await this.componentRepository.find({isActive:true});
+    return components;
+  }
   
   async updateStockQuantity(componentId: string, newQuantity: number, userId: string): Promise<void> {
     const component = await this.componentRepository.findOne(componentId);

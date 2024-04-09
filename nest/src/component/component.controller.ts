@@ -1,4 +1,4 @@
-import { Controller,Param,Delete, Post, Put,Body } from '@nestjs/common';
+import { Controller,Param,Delete, Post, Put,Body, Get } from '@nestjs/common';
 import { ComponentService } from './component.service';
 
 @Controller('api/inventory/component')
@@ -20,6 +20,11 @@ export class ComponentController {
   
   updateStockQuantityupdateStockQuantity(@Param('componentId') componentId: string,newQuantity: number, userId: string){
 return this.componentService.updateStockQuantity(componentId,newQuantity,userId);
+  }
+  @Get()
+  
+  getAllComponents(){
+return this.componentService.getAllComponents();
   }
 
 }
