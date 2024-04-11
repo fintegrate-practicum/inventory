@@ -1,4 +1,5 @@
-import httpSrvice from "../httpSrvice";
+import axiosInstance from "../httpSrvice";
+const httpSrvice = await axiosInstance();
 
 export const deleteComponent = (componentId: number): Promise<any> => {
     return httpSrvice.delete(`/component/${componentId}`);
