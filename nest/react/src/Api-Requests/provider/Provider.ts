@@ -1,5 +1,4 @@
-import axiosInstance from "../httpSrvice";
-const httpSrvice = await axiosInstance();
+import httpSrvice from "../httpSrvice";
 
 export const getAllProviders = (businessId: number): Promise<any> => {
     return httpSrvice.get(`/providers/${businessId}`);
