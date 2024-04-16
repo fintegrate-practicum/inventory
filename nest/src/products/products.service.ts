@@ -7,7 +7,7 @@ export class ProductService {
 
   constructor(private readonly ProductRepository: ProductRepository) { }
 
-  async getProductsByAdminId(): Promise<any[]> {
+  async getAllProducts(): Promise<any[]> {
     // adminId-token
     const products = await this.ProductRepository.find({ isActive:true,adminId });
 
@@ -24,8 +24,8 @@ export class ProductService {
   }
 
 
-  async getProductBybussinessId(bussinesId: string): Promise<any[]> {
-    const products = await this.ProductRepository.find({bussinesId ,isActive:true} );
+  async getProductBybussinessId(businessId: string): Promise<any[]> {
+    const products = await this.ProductRepository.find({businessId ,isActive:true} );
     return products;
   }
 

@@ -6,19 +6,14 @@ import { ProductsService } from './products.service';
 export class ProductsController {
     constructor(private readonly ProductsService: ProductsService) { }
     
-    @Get(':businessId')
-    getAllPrductByBusinessId(@Param('businessId') businessId: string) {
-        return this.ProductsService.getAllProductsByBusinessId(businessId);
-    }
-
-    @Get('one/:productId')
+    @Get(':productId')
     getProductById(@Param('productId') productId: string) {
         return this.ProductsService.getProductById(productId);
     }
 
-    @Get('admin/')
-    getProductsByAdminId() {
-        return this.ProductsService.getProductsByAdminId();
+    @Get()
+    getAllProducts() {
+        return this.ProductsService.getAllProducts();
     }
 
     @Put('sale/')

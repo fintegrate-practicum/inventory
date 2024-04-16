@@ -14,7 +14,7 @@ export class ComponentService {
     }
 
 
-    if (!elementData.name || !elementData.price || !elementData.description || !elementData.minQuantity) {
+    if (!elementData.componentName || !elementData.componentBuyPrice ||!elementData.minQuantity) {
       throw new BadRequestException('Mandatory fields missing for adding a new site element.');
     }
     const savedElement = await this.componentRepository.create(elementData);
@@ -22,8 +22,9 @@ export class ComponentService {
     return savedElement;
   }
 
-  async getAllComponents(bussinesId: string): Promise<any[]> {
-    const components = await this.componentRepository.find({ isActive: true, bussinesId });
+  async getAllComponents(): Promise<any[]> {
+    // adminId-token
+    const components = await this.componentRepository.find({ isActive: true,adminId:adminId});
     return components;
   }
   
@@ -39,7 +40,7 @@ export class ComponentService {
 
   async updateComponent(componentId: string, updatedFields: any): Promise<any> {
 
-    const component = await this.componentRepository.findById({componentId,isActive:true});
+    const component = await this.componentRepository.findOne({_id:componentId,isActive:true});
 
 
     if (!component) {

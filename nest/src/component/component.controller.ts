@@ -23,11 +23,11 @@ export class ComponentController {
     return this.componentService.updateComponent(componentId, updatedFields);
   }
 
-  @Get(':bussinesId')
-  getAllComponents(@Param('bussinesId') bussinesId: string) {
-    return this.componentService.getAllComponents(bussinesId);
+  @Get()
+  getAllComponents() {
+    return this.componentService.getAllComponents();
   }
-  @Get('one/:componentId')
+  @Get(':componentId')
   getComponentById(@Param('componentId') componentId: string) {
       return this.componentService.getComponentById(componentId);
   }
