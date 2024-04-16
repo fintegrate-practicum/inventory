@@ -6,34 +6,43 @@ import { Column, Entity } from 'typeorm';
 export class Component {
 
     @Column({ nullable: false })
-    @Length(3, 20, { message: "name must be at least 3 characters" })
+    @IsNotEmpty()
+    @Length(3, 20, { message: "name must be between 3 and 20 letters" })
     componentName: string;
 
     @Column({ nullable: false })
+    @IsNotEmpty()
     @Min(1, { message: "price must be more than 1" })
     componentBuyPrice: number;
 
     @Column({ nullable: false })
+    @IsNotEmpty()
     businessId: number;
 
     @Column({ nullable: false })
+    @IsNotEmpty()
     addingComponentDate: Date = new Date();
 
     @Column({ nullable: false })
-    @Min(1, { message: "must be positive" })
+    @IsNotEmpty()
+    @Min(1, { message: "min quantity must be positive" })
     minQuantity: number;
 
     @Column({ nullable: false })
+    @IsNotEmpty()
     @Min(0, { message: "stoke must be positive" })
     componentStock: number = 0;
 
     @Column({ nullable: false })
+    @IsNotEmpty()
     isActive: boolean = false;
 
     @Column({ nullable: false })
+    @IsNotEmpty()
     adminId: string;
 
     @Column({ nullable: false })
+    @IsNotEmpty()
     isSoldSeparately: boolean = false;
 
     @Column({ nullable: false })
@@ -69,10 +78,12 @@ export class Component {
     componentSize: string;
 
     @Column({ nullable: false })
-    @Length(3, 15, { message: "must be at least 3 characters" })
+    @IsNotEmpty()
+    @Length(3, 15, { message: "status must be between 3 and 15 letters" })
     componentStatus: string;
 
     @Column({ nullable: false })
+    @IsNotEmpty()
     bussinesId: string;
 
 }
