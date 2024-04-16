@@ -7,85 +7,83 @@ export class ProductService {
 
   constructor(private readonly ProductRepository: ProductRepository) { }
 
-  async softDeleteProduct(productId: string): Promise<void> {
+  async getProductsByAdminId(): Promise<any[]> {
+    // adminId-token
+    const products = await this.ProductRepository.find({ isActive:true,adminId });
 
-    const product = await this.ProductRepository.findOne({ id: productId });
+    return products;
+  }
+
+
+  async getProductById(ProductId: string): Promise<any[]> {
+    const product = await this.ProductRepository.findById({ProductId,isActive:true});
+
+    if (!product) 
+      throw new NotFoundException('product not found.');
+    return product;
+  }
+
+
+  async getProductBybussinessId(bussinesId: string): Promise<any[]> {
+    const products = await this.ProductRepository.find({bussinesId ,isActive:true} );
+    return products;
+  }
+
+  async softDeleteProduct(productId: string): Promise<void> {
+    // adminId-token
+    const product = await this.ProductRepository.findById( productId );
 
     if (!product) {
       throw new NotFoundException('Product not found.');
     }
 
-
-    product.status = 'inactive';
-
+    product.isActive = false;
 
     await this.ProductRepository.save(product);
   }
-  async addNewProduct(productData: any, userId: string): Promise<any> {
 
-    if (!userHasBusinessManagerPermission(userId)) {
+  async addNewProduct(productData: any): Promise<any> {
+    // adminId-token מקבל מה
+    if (!this.userHasBusinessManagerPermission(adminId)) {
       throw new ForbiddenException('Insufficient permissions to add a new product.');
     }
-
-
-    const newProduct = this.ProductRepository.create(productData);
-
-
-    const savedProduct = await this.ProductRepository.save(newProduct);
+    const savedProduct = await this.ProductRepository.create(productData);
 
     return savedProduct;
   }
-  async getProductsByManagerId(managerId: string): Promise<any[]> {
-    const products = await this.ProductRepository.find({ where: { managerId: managerId } });
 
-    if (!products) {
-      throw new NotFoundException('No products found for the provided manager ID.');
-    }
+  
 
-    return products;
+  async updateProduct(ProductId: string, updatedFields: any): Promise<any> {
+    // adminId-token
+    const product = await this.ProductRepository.findById({ProductId,isActive:true});
+
+    if (!product) 
+      throw new NotFoundException('Product not found.');
+    
+    if (product.adminId !== adminId) 
+      throw new ForbiddenException('You are not authorized to update this product.');
+
+    Object.assign(product, updatedFields);
+    const updatedProduct=await this.ProductRepository.save(product);
+    return updatedProduct;
   }
-  async updateProductOfAdmin(managerId: string, newSalePercentage: number, userId: string): Promise<void> {
 
-    if (!userHasBusinessManagerPermission(userId)) {
+
+  async updateProductDiscount(newSalePercentage: number): Promise<void> {
+    // adminId-token
+    if (!this.userHasBusinessManagerPermission(adminId)) 
       throw new ForbiddenException('Insufficient permissions to update products.');
-    }
 
-
-    const managerProducts = await this.ProductRepository.find({ where: { managerId } });
-
-
-    await Promise.all(managerProducts.map(async (product) => {
+    const managerProducts = await this.ProductRepository.find({ adminId ,isActive:true});
+    await Promise.all(managerProducts.map(async (product: any) => {
       product.salePercentage = newSalePercentage;
       return this.ProductRepository.save(product);
     }));
   }
 
-
-  async getProductById(ProductId: string): Promise<any[]> {
-    const product = await this.ProductRepository.find({
-      where: { ProductId: ProductId },
-      select: ['productName', 'price', 'description', 'isOnSale', 'salePercentage', 'stockQuantity'],
-    });
-
-    if (!product) {
-      throw new NotFoundException('product not found.');
-    }
-
-    return product;
-  }
-  async getProductsForSaleByCompany(companyId: string): Promise<any[]> {
-    const products = await this.ProductRepository.find({
-      where: { companyId: companyId, stockQuantity: MoreThan(0) },
-      select: ['productName', 'price', 'description', 'isOnSale', 'salePercentage', 'stockQuantity'],
-    });
-
-    if (!products) {
-      throw new NotFoundException('No products available for sale for the provided company ID.');
-    }
-
-    return products;
-  }
-  private userHasBusinessManagerPermission(userId: string): boolean {
+  
+  private userHasBusinessManagerPermission(adminId: string): boolean {
     //פה צריך לבדוק האם למשתמש יש הרשאה מהמנהל
     return true
 

@@ -7,30 +7,29 @@ export class ComponentController {
   constructor(private readonly componentService: ComponentService) { }
 
   @Delete(':componentId')
-  async softDeleteComponent(@Param('componentId') componentId: string, userId: string) {
-    await this.componentService.softDeleteComponent(componentId, userId);
+  async softDeleteComponent(@Param('componentId') componentId: string) {
+    await this.componentService.softDeleteComponent(componentId);
     return { message: 'Component soft deleted successfully' };
   }
 
   @Post()
-  async addNewProvider(@Body() newComponent: any, userId: string) {
-    await this.componentService.addNewComponent(newComponent, userId);
+  async addNewProvider(@Body() newComponent: any) {
+    await this.componentService.addNewComponent(newComponent);
     return { message: 'Component  added successfully' };
   }
 
-  @Put('/Quantity:componentId')
-  updateStockQuantity(@Param('componentId') componentId: string, newQuantity: number, userId: string) {
-    return this.componentService.updateStockQuantity(componentId, newQuantity, userId);
-  }
-
   @Put(':componentId')
-  updateComponent(@Param('componentId') componentId: string, updatedFields: any, userId: string) {
-    return this.componentService.updateComponent(componentId, updatedFields, userId);
+  updateComponent(@Param('componentId') componentId: string, updatedFields: any) {
+    return this.componentService.updateComponent(componentId, updatedFields);
   }
 
   @Get(':bussinesId')
   getAllComponents(@Param('bussinesId') bussinesId: string) {
     return this.componentService.getAllComponents(bussinesId);
+  }
+  @Get('one/:componentId')
+  getComponentById(@Param('componentId') componentId: string) {
+      return this.componentService.getComponentById(componentId);
   }
 
 }

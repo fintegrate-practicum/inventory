@@ -18,18 +18,18 @@ export class ProvidersService {
     return provider;
   }
 
-  async updateProvider(providerId: string, updatedFields: any, userId: string): Promise<void> {
+  async updateProvider(providerId: string, updatedFields: any, managerId: string): Promise<void> {
 
     const provider = await this.providerRepository.findOne(providerId);
 
     if (!provider) {
       throw new NotFoundException('Provider not found.');
     }
-    if (provider.deleted) {
+    if (!provider.isActive) {
       throw new NotFoundException('Provider is deleted.');
     }
 
-    if (provider.ownerId !== userId) {
+    if (provider.ownerId !== managerId) {
       throw new ForbiddenException('You are not authorized to update this provider.');
     }
     Object.assign(provider, updatedFields);
@@ -39,7 +39,7 @@ export class ProvidersService {
 
   async getProvidersByBusinessId(businessId: string): Promise<any[]> {
 
-    const providers = await this.providerRepository.find({ businessId, deleted: false });
+    const providers = await this.providerRepository.find({ businessId, isActive: true });
 
     return providers;
   }
