@@ -1,22 +1,25 @@
-import { createSlice} from "@reduxjs/toolkit";
-import { deleteItem,setData,addItem,updateItem } from "../../app/actions";
+import { createSlice } from "@reduxjs/toolkit";
+import { deleteItem, setData, addItem, updateItem, State } from "../../app/actions";
 
+export interface Product {
+    id: string;
+}
 
-const initialState = {
-    data: []
+const initialState:State<Product>= {
+    data: [],
 };
 
 const productSlice = createSlice({
     name: "product",
     initialState,
     reducers: {
-       
+
         deleteProduct: deleteItem,
         addProduct: addItem,
-        getProductsAdmin:setData,
-        updateProduct:updateItem
+        getProductsAdmin: setData,
+        updateProduct: updateItem
     }
 });
 
-export const { deleteProduct, addProduct,getProductsAdmin,updateProduct } = productSlice.actions;
+export const { deleteProduct, addProduct, getProductsAdmin, updateProduct } = productSlice.actions;
 export default productSlice.reducer;
