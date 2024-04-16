@@ -1,7 +1,7 @@
 
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-
+// /////////////// for example only/////////////////////////
 @Injectable()
 export class ProductService {
 

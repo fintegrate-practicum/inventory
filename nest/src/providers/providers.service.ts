@@ -3,14 +3,14 @@
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 
-
+// /////////////// for example only/////////////////////////
 @Injectable()
 export class ProvidersService {
 
   constructor(private readonly providerRepository: ProviderRepository) { }
 
   async getProvidersById(providerId: string): Promise<any[]> {
-    const provider = await this.providerRepository.findOne(providerId);
+    const provider = await this.providerRepository.findOne({_id:providerId,isActive:true});
     if (!provider) {
       throw new NotFoundException('Provider not found.');
     }
@@ -18,8 +18,8 @@ export class ProvidersService {
     return provider;
   }
 
-  async updateProvider(providerId: string, updatedFields: any, managerId: string): Promise<void> {
-
+  async updateProvider(providerId: string, updatedFields: any): Promise<void> {
+    // adminId-token
     const provider = await this.providerRepository.findOne(providerId);
 
     if (!provider) {
@@ -29,7 +29,7 @@ export class ProvidersService {
       throw new NotFoundException('Provider is deleted.');
     }
 
-    if (provider.ownerId !== managerId) {
+    if (provider.adminId !== adminId) {
       throw new ForbiddenException('You are not authorized to update this provider.');
     }
     Object.assign(provider, updatedFields);
@@ -37,15 +37,15 @@ export class ProvidersService {
     await this.providerRepository.save(provider);
   }
 
-  async getProvidersByBusinessId(businessId: string): Promise<any[]> {
+  async getAllProviders(): Promise<any[]> {
 
-    const providers = await this.providerRepository.find({ businessId, isActive: true });
+    const providers = await this.providerRepository.find({ isActive: true });
 
     return providers;
   }
 
-  async deleteProvider(providerId: string, deleterId: string, isAdmin: boolean): Promise<void> {
-
+  async deleteProvider(providerId: string): Promise<void> {
+    // adminId-token
     if (!isAdmin) {
       throw new ForbiddenException('Only administrators can delete providers.');
     }
@@ -55,7 +55,7 @@ export class ProvidersService {
       throw new NotFoundException('Provider not found.');
     }
 
-    if (provider.ownerId !== deleterId) {
+    if (provider.adminId !== adminId) {
       throw new ForbiddenException('You are not authorized to delete this provider.');
     }
 

@@ -8,19 +8,19 @@ import { ProvidersService } from './providers.service';
 export class ProvidersController {
   constructor(private readonly ProvidersService: ProvidersService) { }
 
-  @Get(':businessId')
-  getProvidersByBusinessId(@Param('businessId') businessId: string) {
-    return this.ProvidersService.getProvidersByBusinessId(businessId);
+  @Get()
+  getAllProviders() {
+    return this.ProvidersService.getAllProviders();
   }
 
-  @Get('allproviders/:ProviderId')
+  @Get(':ProviderId')
   getProvidersById(@Param('ProviderId') ProviderId: string) {
     return this.ProvidersService.getProvidersById(ProviderId);
   }
 
   @Delete(':providerId')
-  deleteProvider(@Param('providerId') providerId: string, @Body() deleterId: string, isAdmin: boolean) {
-    return this.ProvidersService.deleteProvider(providerId, deleterId, isAdmin);
+  deleteProvider(@Param('providerId') providerId: string) {
+    return this.ProvidersService.deleteProvider(providerId);
   }
 
   @Post()
@@ -29,8 +29,8 @@ export class ProvidersController {
   }
 
   @Put(':providerId')
-  updateProvider(@Param('providerId') providerId: string, @Body() updatedFields: any, managerId: string) {
-    return this.ProvidersService.updateProvider(providerId, updatedFields, managerId);
+  updateProvider(@Param('providerId') providerId: string, @Body() updatedFields: any) {
+    return this.ProvidersService.updateProvider(providerId, updatedFields);
   }
 
 }
