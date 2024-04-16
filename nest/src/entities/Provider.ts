@@ -26,5 +26,8 @@ export class Provider {
     @Column({ nullable: false })
     businessId: string;
 
+    @Column({nullable:false})
+    isActive:boolean=true;
+
 }
 
