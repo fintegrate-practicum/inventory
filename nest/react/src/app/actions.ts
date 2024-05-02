@@ -16,25 +16,27 @@ export const deleteItem = <T extends Item>(state: State<T>, action: PayloadActio
   };
 };
 
-export const addItem =<T extends Item> (state: State<T>, action: PayloadAction<T>) => {
-  return{
+export const addItem = <T extends Item>(state: State<T>, action: PayloadAction<T>) => {
+  return {
     ...state,
-    data : [...state.data, action.payload],
+    data: [...state.data, action.payload],
   };
 };
 
-export const setData =<T extends Item> (state: State<T>, action: PayloadAction<T[]>) => {
-  return{
+export const setData = <T extends Item>(state: State<T>, action: PayloadAction<T[]>) => {
+  return {
     ...state,
-    data : action.payload,
+    data: action.payload,
   };
 };
 
-export const updateItem =<T extends Item> (state: State<T>, action: PayloadAction<T>) => {
-  const updatedIndex = state.data.findIndex((item) => item.id === action.payload.id);
+export const updateItem = <T extends Item>(state: State<T>, action: PayloadAction<T>) => {
+  const updatedState = { ...state };
+  const updatedIndex = updatedState.data.findIndex((item) => item.id === action.payload.id);
   if (updatedIndex !== -1) {
-    const updatedData = [...state.data];
+    const updatedData = [...updatedState.data];
     updatedData[updatedIndex] = action.payload;
-    state.data = updatedData;
+    updatedState.data = updatedData;
   }
+  return updatedState;
 };

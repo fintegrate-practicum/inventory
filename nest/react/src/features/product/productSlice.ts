@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { deleteItem, setData, addItem, updateItem, State } from "../../app/actions";
+import { Component } from "../component/componentSlice";
 
 export interface Product {
     id: string;
@@ -16,9 +17,6 @@ export interface Product {
     stockQuantity: number;
     bussinesId: string;
     componentStatus: string;
-}
-export interface Component {
-    id: string;
 }
 
 const initialState: State<Product> = {
