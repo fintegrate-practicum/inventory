@@ -7,6 +7,6 @@ export const store = configureStore({
     reducer: {
         product: productSlice,
         component: componentSlice,
-        provider: providerSlice,
+        provider: providerSlice
     }
 });

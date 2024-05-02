@@ -3,9 +3,25 @@ import { deleteItem, setData, addItem, updateItem, State } from "../../app/actio
 
 export interface Product {
     id: string;
+    productName: string;
+    productDescription: string;
+    componentsImages: string[];
+    productComponents: Component[];
+    packageCost: number;
+    totalPrice: number;
+    adminId: string;
+    isActive: boolean;
+    isOnSale: boolean;
+    salePercentage: number;
+    stockQuantity: number;
+    bussinesId: string;
+    componentStatus: string;
+}
+export interface Component {
+    id: string;
 }
 
-const initialState:State<Product>= {
+const initialState: State<Product> = {
     data: [],
 };
 
@@ -13,11 +29,10 @@ const productSlice = createSlice({
     name: "product",
     initialState,
     reducers: {
-
         deleteProduct: deleteItem,
         addProduct: addItem,
         getProductsAdmin: setData,
-        updateProduct: updateItem
+        updateProduct: updateItem,
     }
 });
 
