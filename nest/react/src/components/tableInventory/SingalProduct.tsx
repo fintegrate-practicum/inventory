@@ -10,6 +10,7 @@ interface Component {
   
 interface Product {
   //בשביל התחלה....
+  id:number,
  name:string,
  price:number,
  count:number,
