@@ -1,9 +1,12 @@
 import { Length, Min, IsNotEmpty, ValidateIf } from 'class-validator';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 
 export class Component {
+
+    @PrimaryGeneratedColumn()
+    id: string;
 
     @Column({ nullable: false })
     @IsNotEmpty()

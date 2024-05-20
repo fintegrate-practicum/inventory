@@ -1,9 +1,12 @@
-import { Min ,Length,IsNotEmpty} from "class-validator";
-import { Column, Entity } from "typeorm";
+import { Min, Length, IsNotEmpty } from "class-validator";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 
 export class Product {
+
+    @PrimaryGeneratedColumn()
+    id: string;
 
     @Column({ nullable: false })
     @IsNotEmpty()

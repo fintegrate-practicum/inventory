@@ -1,9 +1,12 @@
 import { IsEmail, Length } from "class-validator";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 
 export class Provider {
+
+    @PrimaryGeneratedColumn()
+    id: string;
 
     @Column({ nullable: false })
     @Length(2, 15, { message: "must be at least 3 characters" })
@@ -14,7 +17,7 @@ export class Provider {
     providerEmail: string;
 
     @Column({ nullable: false })
-    @Length(7,10,{message:"phone number is between 7 and 10 digits"})
+    @Length(7, 10, { message: "phone number is between 7 and 10 digits" })
     providerPhone: string;
 
     @Column({ nullable: true })
@@ -26,8 +29,8 @@ export class Provider {
     @Column({ nullable: false })
     businessId: string;
 
-    @Column({nullable:false})
-    isActive:boolean=true;
+    @Column({ nullable: false })
+    isActive: boolean = true;
 
 }
 
