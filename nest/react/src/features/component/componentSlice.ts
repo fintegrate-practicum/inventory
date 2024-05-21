@@ -4,6 +4,7 @@ import { deleteItem,setData,addItem,updateItem, State } from "../../app/actions"
 
 export interface Component {
   id: string;
+  price:number;
 }
 
 const initialState:State<Component> = {
