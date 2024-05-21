@@ -1,35 +1,23 @@
-
-import { DataGrid, GridColDef} from '@mui/x-data-grid';
-interface Component {
-  name: string;
-  price: number;
-
-}
-interface Product {
-  //בשביל התחלה....
-  id: number,
-  name: string,
-  price: number,
-  count: number,
-  component: Component[]
-
-}
-
+import { useState } from 'react';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Component, Product } from "../../App"
 
 const AllProducts: React.FunctionComponent<{ arrInventory: Product[] }> = ({ arrInventory }) => {
 
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Name', width: 130 },
-    { field: 'price', headerName: 'Price', type: 'number', width: 90 },
+    { field: 'productName', headerName: 'Name', width: 130 },
+    { field: 'totalPrice', headerName: 'Price', type: 'number', width: 90 },
     {
-      field: 'count',
+      field: 'stockQuantity',
       headerName: 'Count',
       type: 'number',
       width: 90,
     },
     {
-      field: 'component',
+      field: 'productComponents',
       headerName: 'Components',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
@@ -42,15 +30,18 @@ const AllProducts: React.FunctionComponent<{ arrInventory: Product[] }> = ({ arr
         //return components.map(component => `${<SingalCmponent componentOne={component}/>}`);
         return components.map(component => `name: ${component.name}, price: ${component.price}`).join(', ');
       },
-          
+
     },
   ];
-
+  const handleRowSelectionChange = (selection: any) => {
+    setSelectedRows(selection.rows.map((row: any) => row.id));
+  };
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={arrInventory}
         columns={columns}
+        onRowSelectionModelChange={handleRowSelectionChange}//(בודק אם שורה נבחרה (בשביל הוספת מוצר
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
@@ -63,4 +54,3 @@ const AllProducts: React.FunctionComponent<{ arrInventory: Product[] }> = ({ arr
   );
 }
 export default AllProducts;
-//הקומפוננטות של הצגת כל פריט בנפרד לא באו לשימוש במבנה של הטבלה
