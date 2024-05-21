@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteItem,setData,addItem,updateItem } from "../../app/actions";
+import { deleteItem,setData,addItem,updateItem, State } from "../../app/actions";
 
-const initialState = {
+
+export interface Component {
+  id: string;
+}
+
+const initialState:State<Component> = {
     data: []
 };
 
