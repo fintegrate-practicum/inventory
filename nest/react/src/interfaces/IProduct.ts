@@ -8,7 +8,7 @@ interface IProduct{
     adminId:string;
     isActive:boolean;
     isOnSale:boolean;
-    salePrecentage?:number;//nullable
+    salePrecentage?:number;
     stock:number;
     buisnessId:string;
 }

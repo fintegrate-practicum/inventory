@@ -3,16 +3,16 @@ interface IComponent {
     description: string;
     size: string;
     color: string;
-    images?: string[];//nullable 
+    images?: string[]; 
     dateAddad: Date;
     minQuantity: number;
     buisnessId: string;
     buyPrice: number;
-    sellPrice?: number;//nullable 
+    sellPrice?: number;
     isSoldSepartely: boolean;
     stock: number;
     isActive: boolean;
     adminId: string;
     isInSale: boolean;
-    salePrecentage?: number;//nullable 
+    salePrecentage?: number;
 }
