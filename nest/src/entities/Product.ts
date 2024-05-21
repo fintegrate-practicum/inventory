@@ -48,7 +48,7 @@ export class Product {
 
     @Column({ nullable: true })
     @IsNotEmpty()
-    @Min(1, { message: "percentage must be positive" })
+    @Min(0, { message: "percentage cannot be negative" })
     salePercentage: number = 0;
 
     @Column({ nullable: false })

@@ -20,10 +20,6 @@ export class Component {
 
     @Column({ nullable: false })
     @IsNotEmpty()
-    businessId: number;
-
-    @Column({ nullable: false })
-    @IsNotEmpty()
     addingComponentDate: Date = new Date();
 
     @Column({ nullable: false })
@@ -71,19 +67,14 @@ export class Component {
     @Column({ nullable: false })
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
-    @Min(1, { message: "percentage must be positive" })
-    salePercentage: number;
+    @Min(0, { message: "percentage must be positive" })
+    salePercentage: number = 0;
 
     @Column({ nullable: true })
     componentColor: string;
 
     @Column({ nullable: true })
     componentSize: string;
-
-    @Column({ nullable: false })
-    @IsNotEmpty()
-    @Length(3, 15, { message: "status must be between 3 and 15 letters" })
-    componentStatus: string;
 
     @Column({ nullable: false })
     @IsNotEmpty()

@@ -9,7 +9,7 @@ export class Provider {
     id: string;
 
     @Column({ nullable: false })
-    @Length(2, 15, { message: "must be at least 3 characters" })
+    @Length(2, 15, { message: "must be between 2 and 15 letters" })
     providerName: string;
 
     @Column({ nullable: false })
@@ -33,4 +33,3 @@ export class Provider {
     isActive: boolean = true;
 
 }
-
