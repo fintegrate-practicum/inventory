@@ -13,13 +13,13 @@ interface IFormInput {
 }
 
 const notSaleAloneSchema = yup.object().shape({
-    name: yup.string().required("name is a required field"),
+    name: yup.string().required("name is a required field").min(3,"name must be at least 3 characters").max(20, "name must be at most 20 characters"),
     purchasePrice: yup.number().required("purchase price is a required field").positive("price must be positive"),
     isAlone: yup.boolean()
 });
 
 const saleAloneSchema = yup.object().shape({
-    name: yup.string().required("name is a required field"),
+    name: yup.string().required("name is a required field").min(3,"name must be at least 3 characters").max(20, "name must be at most 20 characters"),
     purchasePrice: yup.number().required("purchase price is a required field").positive("price must be positive"),
     isAlone: yup.boolean(),
     description: yup.string().required("description is a required files"),
@@ -27,12 +27,12 @@ const saleAloneSchema = yup.object().shape({
 });
 
 
-  
+
 export const ComponentForm: React.FC<IFormInput> = () => {
 
     const [isAloneChecked, setIsAloneChecked] = useState(false);
     const { register, handleSubmit, formState: { errors } } =
-     useForm<IFormInput>({ resolver:isAloneChecked && yupResolver(saleAloneSchema) || yupResolver(notSaleAloneSchema)  });
+        useForm<IFormInput>({ resolver: isAloneChecked && yupResolver(saleAloneSchema) || yupResolver(notSaleAloneSchema) });
 
     const save = (data: IFormInput) => {
         if (isAloneChecked)
@@ -60,18 +60,12 @@ export const ComponentForm: React.FC<IFormInput> = () => {
                 checked={isAloneChecked}
                 onChange={handleIsAloneChange} />
 
-
-
             {isAloneChecked && (
                 <>
                     <label>description</label>
                     <input {...register("description")} />
                     {errors.description && <p>{errors.description.message}</p>}
-                </>
-            )}
 
-            {isAloneChecked && (
-                <>
                     <label>salePrice</label>
                     <input {...register("salePrice")} />
                     {errors.salePrice && <p>{errors.salePrice.message}</p>}
