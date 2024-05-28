@@ -9,12 +9,11 @@ const connectDB = async () => {
         const configService = new ConfigService();
         await mongoose.connect(configService.get<string>('MONGO_URI'), {
             dbName: configService.get<string>('DB_NAME'),
-            user: configService.get<string>('DB_USER'),
         });
         console.log('MongoDB Connected Successfully');
     } catch (error) {
-        console.log("MongoDB Not Connected"+error);
+        console.log("MongoDB Not Connected "+error);
     }
 };
 
-export default connectDB;
+ export default connectDB;
