@@ -1,10 +1,10 @@
-interface IProduct{
+export interface IProduct {
     id: string;
     productName: string;
     productDescription: string;
     componentsImages: string[];
     packageCost: number;
-    productComponents: any[];
+    productComponents: string[];
     totalPrice: number;
     adminId: string;
     isActive: boolean;

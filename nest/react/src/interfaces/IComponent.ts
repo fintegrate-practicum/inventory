@@ -1,4 +1,4 @@
-interface IComponent {
+export interface IComponent {
     id: string;
     componentName: string;
     componentBuyPrice: number;
