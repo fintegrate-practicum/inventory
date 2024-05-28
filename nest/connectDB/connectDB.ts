@@ -1,8 +1,5 @@
-import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { ConfigService } from '@nestjs/config';
-
-dotenv.config();
 
 const connectDB = async () => {
     try {
