@@ -1,10 +1,10 @@
-import { Controller, Delete, Get, Param, Put, Post,Body } from '@nestjs/common';
-import { ProductsService } from './products.service';
-
+import { Controller, Delete, Get, Param, Put, Post,Body ,Headers} from '@nestjs/common';
+import { ProductService } from './products.service';
+import { Product } from 'src/entities/Product';
 
 @Controller('api/inventory/product/')
 export class ProductsController {
-    constructor(private readonly ProductsService: ProductsService) { }
+    constructor(private readonly ProductsService: ProductService) { }
     
     @Get(':productId')
     getProductById(@Param('productId') productId: string) {
@@ -17,18 +17,18 @@ export class ProductsController {
     }
 
     @Put('sale/')
-    updateProductDiscount(@Body() newSalePercentage: number) {
-        return this.ProductsService.updateProductDiscount(newSalePercentage);
+    updateProductDiscount(@Headers('x-access-token') token:string,@Body() newSalePercentage: number) {
+        return this.ProductsService.updateProductDiscount(newSalePercentage,token);
     }
     @Put(':productId')
-    updateProduct(@Param('productId') productId: string,@Body() updatedFields: any) {
-        return this.ProductsService.updateProduct(productId,updatedFields);
+    updateProduct(@Headers('x-access-token') token:string,@Param('productId') productId: string,@Body() updatedFields: any) {
+        return this.ProductsService.updateProduct(productId,updatedFields,token);
     }
 
     @Post()
-    async addNewProduct(@Body() newProduct: any) {
-        await this.ProductsService.softDeleteProduct(newProduct);
-        return { message: 'Product soft deleted successfully' };
+    async addNewProduct(@Headers('x-access-token') token:string,@Body() newProduct: Product) {
+        await this.ProductsService.addNewProduct(newProduct,token);
+        return { message: 'Product added succefully' };
     }
 
     @Delete(':productId')

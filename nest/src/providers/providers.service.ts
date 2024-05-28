@@ -2,15 +2,16 @@
 
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-
+import { Provider } from 'src/entities/Provider';
+import { Repository } from 'typeorm';
 // /////////////// for example only/////////////////////////
 @Injectable()
 export class ProvidersService {
 
-  constructor(private readonly providerRepository: ProviderRepository) { }
+  constructor(private readonly providerRepository: Repository<Provider>) { }
 
-  async getProvidersById(providerId: string): Promise<any[]> {
-    const provider = await this.providerRepository.findOne({_id:providerId,isActive:true});
+  async getProviderById(providerId: string): Promise<Provider> {
+    const provider = await this.providerRepository.findOneBy({id:providerId,isActive:true});
     if (!provider) {
       throw new NotFoundException('Provider not found.');
     }
@@ -18,9 +19,9 @@ export class ProvidersService {
     return provider;
   }
 
-  async updateProvider(providerId: string, updatedFields: any): Promise<void> {
+  async updateProvider(providerId: string, updatedFields: any,businessId:string): Promise<void> {
     // adminId-token
-    const provider = await this.providerRepository.findOne(providerId);
+    const provider = await this.providerRepository.findOneBy({id:providerId});
 
     if (!provider) {
       throw new NotFoundException('Provider not found.');
@@ -29,7 +30,7 @@ export class ProvidersService {
       throw new NotFoundException('Provider is deleted.');
     }
 
-    if (provider.adminId !== adminId) {
+    if (provider.businessId !== businessId) {
       throw new ForbiddenException('You are not authorized to update this provider.');
     }
     Object.assign(provider, updatedFields);
@@ -37,33 +38,31 @@ export class ProvidersService {
     await this.providerRepository.save(provider);
   }
 
-  async getAllProviders(): Promise<any[]> {
+  async getAllProviders(): Promise<Provider[]> {
 
-    const providers = await this.providerRepository.find({ isActive: true });
+    const providers = await this.providerRepository.findBy({ isActive: true });
 
     return providers;
   }
 
-  async deleteProvider(providerId: string): Promise<void> {
+  async deleteProvider(providerId: string,businessId:string): Promise<void> {
     // adminId-token
-    if (!isAdmin) {
-      throw new ForbiddenException('Only administrators can delete providers.');
-    }
+    
 
-    const provider = await this.providerRepository.findOne(providerId);
+    const provider = await this.providerRepository.findOneBy({id:providerId});
     if (!provider) {
       throw new NotFoundException('Provider not found.');
     }
 
-    if (provider.adminId !== adminId) {
+    if (provider.businessId !== businessId) {
       throw new ForbiddenException('You are not authorized to delete this provider.');
     }
 
-    provider.deleted = true;
+    provider.isActive = false;
     await this.providerRepository.save(provider);
   }
 
-  async addNewProvider(providerData: any): Promise<any> {
+  async addNewProvider(providerData: Provider): Promise<any> {
 
     const savedProvider = await this.providerRepository.save(providerData);
 
