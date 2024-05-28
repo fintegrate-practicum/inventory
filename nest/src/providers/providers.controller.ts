@@ -1,8 +1,6 @@
-
-
-import { Controller, Get, Param, Delete, Body, Post, Put } from '@nestjs/common';
+import { Controller, Get, Param, Delete, Body, Post, Put,Headers } from '@nestjs/common';
 import { ProvidersService } from './providers.service';
-
+import { Provider } from 'src/entities/Provider';
 
 @Controller('api/inventory/providers')
 export class ProvidersController {
@@ -14,23 +12,23 @@ export class ProvidersController {
   }
 
   @Get(':ProviderId')
-  getProvidersById(@Param('ProviderId') ProviderId: string) {
-    return this.ProvidersService.getProvidersById(ProviderId);
+  getProviderById(@Param('ProviderId') ProviderId: string) {
+    return this.ProvidersService.getProviderById(ProviderId);
   }
 
   @Delete(':providerId')
-  deleteProvider(@Param('providerId') providerId: string) {
-    return this.ProvidersService.deleteProvider(providerId);
+  deleteProvider(@Headers('x-access-token') token:string,@Param('providerId') providerId: string) {
+    return this.ProvidersService.deleteProvider(providerId,token);
   }
 
   @Post()
-  addNewProvider(@Body() newProvider: any) {
+  addNewProvider(@Body() newProvider: Provider) {
     return this.ProvidersService.addNewProvider(newProvider);
   }
 
   @Put(':providerId')
-  updateProvider(@Param('providerId') providerId: string, @Body() updatedFields: any) {
-    return this.ProvidersService.updateProvider(providerId, updatedFields);
+  updateProvider(@Headers('x-access-token') token:string,@Param('providerId') providerId: string, @Body() updatedFields: any) {
+    return this.ProvidersService.updateProvider(providerId, updatedFields,token);
   }
 
 }

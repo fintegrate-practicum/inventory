@@ -1,13 +1,14 @@
 import { Injectable, ForbiddenException, BadRequestException, NotFoundException } from '@nestjs/common';
-
+import { Component } from 'src/entities/Component';
+import { Repository } from 'typeorm';
 // /////////////// for example only/////////////////////////
 @Injectable()
 export class ComponentService {
+ 
+  constructor(private readonly componentRepository: Repository<Component>) { } 
 
-  constructor(private readonly componentRepository: componentRepository) { }
 
-
-  async addNewComponent(elementData: any): Promise<any> {
+  async addNewComponent(elementData: Component,adminId:string): Promise<any> {
 // adminId-token
     if (!this.userHasBusinessManagerPermission(adminId)) {
       throw new ForbiddenException('Insufficient permissions to add a new site element.');
@@ -24,12 +25,12 @@ export class ComponentService {
 
   async getAllComponents(): Promise<any[]> {
     // adminId-token
-    const components = await this.componentRepository.find({ isActive: true,adminId:adminId});
+    const components = await this.componentRepository.findBy({ isActive: true});
     return components;
   }
   
   async getComponentById(componentId: string): Promise<any[]> {
-    const component = await this.ProductRepository.findById({isActive: true,_id:componentId} );
+    const component = await this.componentRepository.findBy({isActive: true,id:componentId} );
   
     if (!component) 
       throw new NotFoundException('component not found.');
@@ -38,9 +39,9 @@ export class ComponentService {
   }
   
 
-  async updateComponent(componentId: string, updatedFields: any): Promise<any> {
+  async updateComponent(componentId: string, updatedFields: any,adminId:string): Promise<any> {
 
-    const component = await this.componentRepository.findOne({_id:componentId,isActive:true});
+    const component = await this.componentRepository.findOneBy({id:componentId,isActive:true});
 
 
     if (!component) {
@@ -61,8 +62,8 @@ export class ComponentService {
     return updatedComponent;
   }
   
- async softDeleteComponent(componentId: string): Promise<void> {
-    const component = await this.componentRepository.findById(componentId);
+ async softDeleteComponent(componentId: string,adminId:string): Promise<void> {
+    const component = await this.componentRepository.findOneBy({id:componentId});
 
     if (!component) {
       throw new NotFoundException('Component not found');
