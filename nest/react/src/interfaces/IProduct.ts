@@ -1,10 +1,12 @@
-export interface IProduct{
+import { IComponent } from "./IComponent";
+
+export interface IProduct {
     id: string;
     productName: string;
     productDescription: string;
     componentsImages: string[];
     packageCost: number;
-    productComponents: any[];
+    productComponents: IComponent | IProduct[];
     totalPrice: number;
     adminId: string;
     isActive: boolean;
