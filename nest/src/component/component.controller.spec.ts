@@ -9,17 +9,11 @@ import { ComponentService } from './component.service';
 describe('ComponentController', () => {
   let controller: ComponentController;
   let componentRepository: Repository<Component>;
-  let jwtService: JwtService;
+ 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ComponentController],
       providers: [ComponentService,
-        {
-          provide: JwtService,
-          useValue: {
-             
-          },
-      },
       {
           provide: getRepositoryToken(Component),
           useValue: {
@@ -37,7 +31,6 @@ describe('ComponentController', () => {
 
     controller = module.get<ComponentController>(ComponentController);
     componentRepository = module.get<Repository<Component>>(getRepositoryToken(Component));
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('should be defined', () => {

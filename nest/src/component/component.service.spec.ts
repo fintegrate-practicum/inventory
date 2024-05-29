@@ -8,18 +8,11 @@ import { Component } from '../entities/Component';
 describe('ProductService', () => {
   let service: ComponentService;
   let componentRepository: Repository<Component>;
-  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ComponentService,
-        {
-          provide: JwtService,
-          useValue: {
-             
-          },
-      },
-      {
+       {
           provide: getRepositoryToken(Component),
           useValue: {
               findOne: jest.fn(),
@@ -36,7 +29,6 @@ describe('ProductService', () => {
 
     service = module.get<ComponentService>(ComponentService);
     componentRepository = module.get<Repository<Component>>(getRepositoryToken(Component));
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('should be defined', () => {
