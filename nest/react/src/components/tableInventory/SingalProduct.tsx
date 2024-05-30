@@ -1,44 +1,19 @@
 import React from 'react';
-import SingalCmponent from './SingalComponent';
+import SingalComponent from './SingalComponent';
+import {Product} from '../../App';
 
-interface Component {
-    //בשביל התחלה....
-    name: string;
-    price: number;
-
-  }
-  
-interface Product {
-  //בשביל התחלה....
-  id:number,
- name:string,
- price:number,
- count:number,
- component:Component[]
-
-}
-
-// interface Component {
-//     //בשביל התחלה....
-//     name: string;
-//     price: number;
-
-//   }
-interface SingalProductProps {
-    product: Product;
-  }
- const SingalProduct: React.FunctionComponent<SingalProductProps>  = ({ product }) => {
+ const SingalProduct: React.FunctionComponent<{product: Product;}>  = ({ product }) => {
     return (
         <> 
-        <h2>name: {product.name}</h2>
-        <h2>price: {product.price}</h2>
-        <h2>count: {product.count}</h2>
+        <h2>name: {product.productName}</h2>
+        <h2>price: {product.totalPrice}</h2>
+        <h2>count: {product.stockQuantity}</h2>
 
 
         components:
-        {product.component.map((item, index) => (
+        {product.productComponents.map((item, index) => (
                     <p key={index}>
-                        <SingalCmponent componentOne={item} />
+                        <SingalComponent component={item} />
                     </p>))
         }
         </>

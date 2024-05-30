@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Component, Product } from "../../App"
+import { Component, Product } from '../../App';
+import SingalComponent from './SingalComponent';
 
 const AllProducts: React.FunctionComponent<{ arrInventory: Product[] }> = ({ arrInventory }) => {
 
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+ const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -27,8 +28,11 @@ const AllProducts: React.FunctionComponent<{ arrInventory: Product[] }> = ({ arr
         if (!components || components.length === 0) {
           return 'No Components';
         }
-        //return components.map(component => `${<SingalCmponent componentOne={component}/>}`);
-        return components.map(component => `name: ${component.name}, price: ${component.price}`).join(', ');
+       return components.map(component => `name: ${component.name}, price: ${component.price}`).join(', ');
+      //  return components.map((component, index) => (
+      //   <SingalComponent key={index} component={component} />
+      // )); 
+      //  ולא הצלחתי לפתור זאת[obect Obect] אם אני מנסה להציג מקומפוננטה אחרת מציג 
       },
 
     },

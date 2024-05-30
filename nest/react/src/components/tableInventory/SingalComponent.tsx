@@ -1,20 +1,11 @@
-import Details from "./Details";
-interface Component {
-    name: string;
-    price: number;
+import {Component} from '../../App'
 
-}
-interface SingalComponentProps {
-    componentOne: Component;
-}
-const SingalCmponent: React.FunctionComponent<SingalComponentProps> = ({ componentOne }) => {
+ const SingalComponent: React.FunctionComponent< {component:Component}> = ({ component }) => {
     return (
-        <>
-            <p>{componentOne.name}</p>
-            {/* <Details/> */}
-
-        </>
+        <div>
+        <div>Name: {component.name}</div>
+        <div>Price: {component.price}</div>
+      </div>
     );
-}
-
-export default SingalCmponent;
+  }
+   export default SingalComponent;

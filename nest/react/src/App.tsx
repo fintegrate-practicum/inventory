@@ -1,6 +1,6 @@
 
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 import AllProducts from './components/tableInventory/AllProducts';
 
 
@@ -28,9 +28,6 @@ export interface Product {
 }
 function App() {
   const [arrInventory, setArrInventory] = useState<Product[]>([
-    // { id: 1, name: "table", price: 180, count: 40, component: [{ name: "table leg", price: 10 }, { name: "table leg", price: 10 }] },
-    // { id: 2, name: "chair", price: 140, count: 30, component: [{ name: "table leg", price: 10 }, { name: "table leg", price: 10 }] },
-    // { id: 3, name: "desk", price: 150, count: 20, component: [] },
     {id: "1",
       productName: "table",
       productDescription:"mnbvcx",
