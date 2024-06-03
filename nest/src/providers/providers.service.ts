@@ -2,13 +2,16 @@
 
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Provider } from 'src/entities/Provider';
+import { Provider } from '../entities/Provider';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 // /////////////// for example only/////////////////////////
 @Injectable()
 export class ProvidersService {
 
-  constructor(private readonly providerRepository: Repository<Provider>) { }
+  constructor(
+    @InjectRepository(Provider)
+    private readonly providerRepository: Repository<Provider>) { }
 
   async getProviderById(providerId: string): Promise<Provider> {
     const provider = await this.providerRepository.findOneBy({id:providerId,isActive:true});

@@ -1,12 +1,14 @@
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Product } from 'src/entities/Product';
+import { Product } from '../entities/Product';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 /////for example only////////
 @Injectable()
 export class ProductService {
-
-  constructor(private readonly productRepository: Repository<Product>) { } 
+  constructor(
+  @InjectRepository(Product)
+  private readonly productRepository: Repository<Product>) { } 
 
   async getAllProducts(): Promise<any[]> {
     const products = await this.productRepository.findBy( {isActive: true });

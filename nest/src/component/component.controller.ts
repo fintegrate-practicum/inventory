@@ -1,6 +1,6 @@
 import { Controller, Param, Delete, Post, Put, Body, Get ,Headers} from '@nestjs/common';
 import { ComponentService } from './component.service';
-import { Component } from 'src/entities/Component';
+import { Component } from '../entities/Component';
 @Controller('api/inventory/component')
 export class ComponentController {
 
