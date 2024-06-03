@@ -1,11 +1,14 @@
-import { Injectable, ForbiddenException, BadRequestException, NotFoundException } from '@nestjs/common';
-import { Component } from 'src/entities/Component';
+import { Injectable, ForbiddenException, BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
+import { Component } from '../entities/Component';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 // /////////////// for example only/////////////////////////
 @Injectable()
 export class ComponentService {
  
-  constructor(private readonly componentRepository: Repository<Component>) { } 
+  constructor(
+   @InjectRepository(Component)
+    private readonly componentRepository: Repository<Component>) { } 
 
 
   async addNewComponent(elementData: Component,adminId:string): Promise<any> {
@@ -21,6 +24,8 @@ export class ComponentService {
     const savedElement = await this.componentRepository.create(elementData);
 
     return savedElement;
+
+     
   }
 
   async getAllComponents(): Promise<any[]> {
