@@ -1,6 +1,6 @@
 
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { Product } from '../entities/Product';
+import { Injectable, NotFoundException, BadRequestException, ForbiddenException, ConflictException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 /////for example only////////
@@ -40,11 +40,35 @@ export class ProductService {
     await this.productRepository.save(product);
   }
 
-  async addNewProduct(productData: Product, adminId: string): Promise<any> {
-    if (!this.userHasBusinessManagerPermission(adminId)) {
+ 
+  async addNewProduct(productData: any,adminId:string): Promise<any> {
+   if (!this.userHasBusinessManagerPermission(adminId)) 
       throw new ForbiddenException('Insufficient permissions to add a new product.');
+
+    let sameName = await this.productRepository.findOne({where:{ productName: productData.productName, isActive: true} })
+    if (sameName) {
+      throw new ConflictException('a product with the same name already exists');
     }
-    const savedProduct = await this.productRepository.save(productData);
+
+
+    checkSameProduct(productData);
+    async function checkSameProduct(product: Product) {
+      const existingProduct = await this.productRepository.collection('products').findOne({
+        components: { $all: product.productComponents },
+        "components.quantity": { $all: product.productComponents.map(component => component.quantity) }
+      });
+      if (existingProduct) {
+        throw new ConflictException('A product with the same components and quantities already exists');
+      }
+    }
+    
+    if (productData.components.length < 2 && !productData.components.some((component: any) => component.quantity >= 2)) {
+      throw new BadRequestException('A product must have at least two components or one component with at least two quantities.');
+    }
+
+    const newProduct = this.productRepository.create(productData);
+    const savedProduct = await this.productRepository.save(newProduct);
+
     return savedProduct;
   }
 
