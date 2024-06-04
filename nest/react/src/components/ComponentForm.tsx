@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch } from 'react-redux';
+import { addComponent } from '../features/component/componentSlice';
+
 interface IFormInput {
     id:string;
     name: string;
@@ -38,13 +40,6 @@ export const ComponentForm: React.FC<IFormInput> = () => {
     const save = (data: IFormInput) => {
         dispatch(addComponent(data));
         console.log();
-        
-        // if (isAloneChecked)
-           
-        //         alert("ניתן למכירה בנפרד")
-            
-        // else
-        //     alert("לא ניתן למכירה בנפרד")
     }
 
     const handleIsAloneChange = (event: React.ChangeEvent<HTMLInputElement>) => {

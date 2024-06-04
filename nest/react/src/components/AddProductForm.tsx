@@ -36,14 +36,7 @@ const AddProductForm=()=>{
       })
       return sum;
     }
-  //   const save = (data: IFormInput) => {
-  //     console.log(data); 
-  // }
-
-
     return (
-      // <form onSubmit={handleSubmit(save)}>
-
         <form onSubmit={handleSubmit(onSubmit)}>
         <label >Name of Product</label><br />
         <input {...register("Name", { required: true, maxLength: 20 })} />
