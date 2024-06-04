@@ -4,9 +4,10 @@ import { useSelector ,useDispatch} from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import  {IProduct}  from "../interfaces/IProduct";
 import { IComponent } from "../interfaces/IComponent";
-
+import {addProduct} from "../features/product/productSlice";
 
 interface IFormInput {
+    id:string
     Name: string
     Description: string
     Pictures: FileList
@@ -14,9 +15,16 @@ interface IFormInput {
   }
 
 const AddProductForm=()=>{
+
     const { register, handleSubmit} = useForm<IFormInput>()
     const dispatch=useDispatch();
-    const onSubmit: SubmitHandler<IFormInput> = (data) =>console.log(data);
+    const onSubmit: SubmitHandler<IFormInput> = (data)=>{
+            dispatch(addProduct(data));
+          console.log(data);
+          
+    }
+     
+    
     const navigate = useNavigate();
     const productState = useSelector((state: any) => state.product);
     const productComponents = productState.data.map((product: IProduct) => product.productComponents);
@@ -28,8 +36,13 @@ const AddProductForm=()=>{
       })
       return sum;
     }
+  //   const save = (data: IFormInput) => {
+  //     console.log(data); 
+  // }
+
 
     return (
+      // <form onSubmit={handleSubmit(save)}>
 
         <form onSubmit={handleSubmit(onSubmit)}>
         <label >Name of Product</label><br />

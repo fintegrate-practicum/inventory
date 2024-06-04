@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import { useDispatch } from 'react-redux';
 interface IFormInput {
+    id:string;
     name: string;
     purchasePrice: number;
     isAlone: boolean;
@@ -11,7 +12,6 @@ interface IFormInput {
     salePrice?: number;
 
 }
-
 const notSaleAloneSchema = yup.object().shape({
     name: yup.string().required("name is a required field").min(3,"name must be at least 3 characters").max(20, "name must be at most 20 characters"),
     purchasePrice: yup.number().required("purchase price is a required field").positive("price must be positive"),
@@ -29,16 +29,22 @@ const saleAloneSchema = yup.object().shape({
 
 
 export const ComponentForm: React.FC<IFormInput> = () => {
+    const dispatch = useDispatch();
 
     const [isAloneChecked, setIsAloneChecked] = useState(false);
     const { register, handleSubmit, formState: { errors } } =
         useForm<IFormInput>({ resolver: isAloneChecked && yupResolver(saleAloneSchema) || yupResolver(notSaleAloneSchema) });
 
     const save = (data: IFormInput) => {
-        if (isAloneChecked)
-            alert("ניתן למכירה בנפרד")
-        else
-            alert("לא ניתן למכירה בנפרד")
+        dispatch(addComponent(data));
+        console.log();
+        
+        // if (isAloneChecked)
+           
+        //         alert("ניתן למכירה בנפרד")
+            
+        // else
+        //     alert("לא ניתן למכירה בנפרד")
     }
 
     const handleIsAloneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
