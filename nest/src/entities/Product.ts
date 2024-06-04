@@ -27,7 +27,7 @@ export class Product {
 
     @Column({ nullable: false })
     @IsNotEmpty()
-    productComponents: any[];
+    productComponents: string[];
 
     @Column({ nullable: false })
     @IsNotEmpty()
