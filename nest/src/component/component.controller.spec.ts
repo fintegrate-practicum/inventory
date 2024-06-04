@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ComponentController } from './component.controller';
-import { JwtService } from '@nestjs/jwt';
 import { Component } from '../entities/Component'; 
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';

@@ -16,7 +16,7 @@ export class Product {
     @IsNotEmpty()
     productDescription: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     @IsNotEmpty()
     componentsImages: string[];
 

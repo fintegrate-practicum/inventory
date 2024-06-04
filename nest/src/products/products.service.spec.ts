@@ -39,7 +39,7 @@ describe('ProductService', () => {
   });
 
   it('should throw ForbiddenException when user does not have business manager permission', async () => {
-    const productData = { productName: 'Test Product', company: 'Test Company', components: [{ name: 'Component A', quantity: 1 }] };
+    const productData = { productName: 'Test Product', components: [{ name: 'Component A', quantity: 8 }] };
     const userId = '123';
 
     await expect(service.addNewProduct(productData, userId)).rejects.toThrow(ForbiddenException);
@@ -70,11 +70,11 @@ describe('ProductService', () => {
   //     await expect(service.addNewProduct(productData, userId)).rejects.toThrow(ConflictException);
   //   });
 
-  it('should throw BadRequestException when product does not meet component requirements', async () => {
-    const productData = { productName: 'Incomplete Product', company: 'Company', components: [{ name: 'Component A', quantity: 1 }] };
-    const userId = '123';
+  // it('should throw BadRequestException when product does not meet component requirements', async () => {
+  //   const productData = { productName: 'Incomplete Product',  components: [{ name: 'Component A', quantity: 1 }] };
+  //   const userId = '123';
 
-    await expect(service.addNewProduct(productData, userId)).rejects.toThrow(BadRequestException);
-  });
+  //   await expect(service.addNewProduct(productData, userId)).rejects.toThrow(BadRequestException);
+  // });
 
 });

@@ -42,8 +42,8 @@ export class ProductService {
 
  
   async addNewProduct(productData: any,adminId:string): Promise<any> {
-   if (!this.userHasBusinessManagerPermission(adminId)) 
-      throw new ForbiddenException('Insufficient permissions to add a new product.');
+  //  if (!this.userHasBusinessManagerPermission(adminId)) 
+  //     throw new ForbiddenException('Insufficient permissions to add a new product.');
 
     let sameName = await this.productRepository.findOne({where:{ productName: productData.productName, isActive: true} })
     if (sameName) {
@@ -51,16 +51,16 @@ export class ProductService {
     }
 
 
-    checkSameProduct(productData);
-    async function checkSameProduct(product: Product) {
-      const existingProduct = await this.productRepository.collection('products').findOne({
-        components: { $all: product.productComponents },
-        "components.quantity": { $all: product.productComponents.map(component => component.quantity) }
-      });
-      if (existingProduct) {
-        throw new ConflictException('A product with the same components and quantities already exists');
-      }
-    }
+    // checkSameProduct(productData);
+    // async function checkSameProduct(product: Product) {
+    //   const existingProduct = await this.productRepository.collection('products').findOne({
+    //     components: { $all: product.productComponents },
+    //     "components.quantity": { $all: product.productComponents.map(component => component.quantity) }
+    //   });
+    //   if (existingProduct) {
+    //     throw new ConflictException('A product with the same components and quantities already exists');
+    //   }
+    // }
     
     if (productData.components.length < 2 && !productData.components.some((component: any) => component.quantity >= 2)) {
       throw new BadRequestException('A product must have at least two components or one component with at least two quantities.');
