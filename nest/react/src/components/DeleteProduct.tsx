@@ -24,7 +24,7 @@ import { useDispatch } from 'react-redux';
 const DeleteProduct = () => {
 
     const [open, setOpen] = React.useState(false);
-    let dispatch=useDispatch();
+    let dispatch = useDispatch();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -33,23 +33,24 @@ const DeleteProduct = () => {
     const handleClose = () => {
         setOpen(false);
     };
- 
-    const deleteProduct = async() => {
-        // פונקציה למחיקה ממסד הנתונים 
-        try{
-          let response=await deleteItem("",""); 
+
+    const deleteProduct = async () => {
+
+        try {
+            // פונקציה למחיקה ממסד הנתונים 
+            //   let response=await deleteItem("",""); 
             alert("המחיקה בוצעה בהצלחה")
-            console.log(response);
-        
+            //     console.log(response);
+
         }
-        catch(err){
+        catch (err) {
             console.log(err);
         }
 
         //מחיקה מהרידקס
-        // dispatch(deleteFromRedux("",""))///מב לבכניס כאן?
+        // dispatch(deleteFromRedux("",""))///מה לבכניס לכאן?
         setOpen(false);
-       
+
     }
 
 
@@ -78,8 +79,8 @@ const DeleteProduct = () => {
             <DialogActions>
                 <Button onClick={handleClose}>cancel</Button>
                 <Button
-                 onClick={deleteProduct} 
-                 autoFocus>
+                    onClick={deleteProduct}
+                    autoFocus>
                     delete
                 </Button>
             </DialogActions>
