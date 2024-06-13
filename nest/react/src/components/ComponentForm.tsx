@@ -39,7 +39,6 @@ export const ComponentForm: React.FC<IFormInput> = () => {
 
     const save = (data: IFormInput) => {
         dispatch(addComponent(data));
-        console.log();
     }
 
     const handleIsAloneChange = (event: React.ChangeEvent<HTMLInputElement>) => {

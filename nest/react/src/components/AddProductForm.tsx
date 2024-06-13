@@ -19,9 +19,7 @@ const AddProductForm=()=>{
     const { register, handleSubmit} = useForm<IFormInput>()
     const dispatch=useDispatch();
     const onSubmit: SubmitHandler<IFormInput> = (data)=>{
-            dispatch(addProduct(data));
-          console.log(data);
-          
+            dispatch(addProduct(data));          
     }
      
     
