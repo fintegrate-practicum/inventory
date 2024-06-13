@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import './App.css';
 import AllProducts from './components/tableInventory/AllProducts';
@@ -64,5 +63,5 @@ function App() {
     </>
   )
 }
-
 export default App
+
