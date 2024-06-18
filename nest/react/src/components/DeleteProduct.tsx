@@ -9,9 +9,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { deleteItem } from '../Api-Requests/genericRequests';
 import { useDispatch } from 'react-redux';
 import { deleteProduct as deleteProductFromState} from '../features/product/productSlice';
+import { IProduct } from '../interfaces/IProduct';
 
 
-const DeleteProduct = () => {
+const DeleteProduct = ({item}:any) => {
 
     const [open, setOpen] = React.useState(false);
     let dispatch = useDispatch();
@@ -27,10 +28,10 @@ const DeleteProduct = () => {
     const deleteProduct = async () => {
 
         try {
-            // פונקציה למחיקה ממסד הנתונים 
-            //   let response=await deleteItem("",""); 
+          
+            let response=await deleteItem("product",item.id); 
             alert("המחיקה בוצעה בהצלחה")
-            //     console.log(response);
+            console.log(response);
 
         }
         catch (err) {
@@ -38,7 +39,7 @@ const DeleteProduct = () => {
         }
 
         //מחיקה מהרידקס
-        dispatch(deleteProductFromState(""))
+        dispatch(deleteProductFromState(item.id))
         setOpen(false);
 
     }
