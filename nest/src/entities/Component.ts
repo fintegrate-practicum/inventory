@@ -1,83 +1,86 @@
 import { Length, Min, IsNotEmpty, ValidateIf } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, SchemaTypes, Types } from 'mongoose';
 
-@Entity()
+@Schema()
+export class Component extends Document {
 
-export class Component {
+    @Prop({ type: SchemaTypes.ObjectId, required: true, auto: true })
+    id: Types.ObjectId;
 
-    @PrimaryGeneratedColumn()
-    id: string;
-
-    @Column({ nullable: false })
+    @Prop({ required: true, unique: true })
     @IsNotEmpty()
-    @Length(3, 20, { message: "name must be between 3 and 20 letters" })
+    @Length(3, 20, { message: "Name must be between 3 and 20 letters" }) // Improved message
     componentName: string;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
-    @Min(1, { message: "price must be more than 1" })
+    @Min(1, { message: "Price must be more than 1" })
     componentBuyPrice: number;
 
-    @Column({ nullable: false })
-    @IsNotEmpty()
+    @Prop({ required: true })
     addingComponentDate: Date = new Date();
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
-    @Min(1, { message: "min quantity must be positive" })
+    @Min(1, { message: "Minimum quantity must be positive" }) // Improved message
     minQuantity: number;
 
-    @Column({ nullable: false })
-    @IsNotEmpty()
-    @Min(0, { message: "stoke must be positive" })
-    componentStock: number = 0;
+    @Prop({ required: true })
+    @Min(0, { message: "Stock must be positive" })
+    componentStock: number;
 
-    @Column({ nullable: false })
-    @IsNotEmpty()
+    @Prop({ required: true, default: false })
     isActive: boolean = false;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
     adminId: string;
 
-    @Column({ nullable: false })
-    @IsNotEmpty()
+    @Prop({ required: true })
     isSoldSeparately: boolean = false;
 
-    @Column({ nullable: false })
-    @ValidateIf((entity) => entity.isSoldSeparately)
+    @Prop({
+        requiredIf: (component: Component) => component.isSoldSeparately,
+    })
     @IsNotEmpty()
     componentDescription: string;
 
-    @Column({ nullable: false })
-    @ValidateIf((entity) => entity.isSoldSeparately)
+    @Prop({
+        requiredIf: (component: Component) => component.isSoldSeparately,
+        min: 0,
+    })
     @IsNotEmpty()
     salePrice: number;
 
-    @Column({ nullable: true })
-    @ValidateIf((entity) => entity.isSoldSeparately)
-    @IsNotEmpty()
+    @Prop({
+        requiredIf: (component: Component) => component.isSoldSeparately,
+    })
     componentImages: string[];
 
-    @Column({ nullable: false })
-    @ValidateIf((entity) => entity.isSoldSeparately)
+    @Prop({
+        requiredIf: (component: Component) => component.isSoldSeparately,
+        
+    })
     @IsNotEmpty()
     isInSale: boolean = false;
 
-    @Column({ nullable: false })
-    @ValidateIf((entity) => entity.isSoldSeparately)
+    @Prop({
+        requiredIf: (component: Component) => component.isSoldSeparately,
+    })
     @IsNotEmpty()
-    @Min(0, { message: "percentage must be positive" })
+    @Min(0, { message: "Percentage must be positive" })
     salePercentage: number = 0;
 
-    @Column({ nullable: true })
+    @Prop()
     componentColor: string;
 
-    @Column({ nullable: true })
+    @Prop()
     componentSize: string;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
-    bussinesId: string;
-
+    businessId: string;
 }
+
+export const ComponentSchema = SchemaFactory.createForClass(Component);

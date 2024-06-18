@@ -1,68 +1,69 @@
-import { Min, Length, IsNotEmpty } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Length, Min, IsNotEmpty, ValidateIf } from 'class-validator';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, SchemaTypes, Types } from 'mongoose';
 
-@Entity()
+@Schema()
+export class Product extends Document {
 
-export class Product {
+    @Prop({ type: SchemaTypes.ObjectId, required: true, auto: true })
+    id: Types.ObjectId;
 
-    @PrimaryGeneratedColumn()
-    id: string;
-
-    @Column({ nullable: false })
+    @Prop({ required: true, unique: true })
     @IsNotEmpty()
+    @Length(3, 20, { message: "Product name must be between 3 and 20 letters" })
     productName: string;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
     productDescription: string;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
     componentsImages: string[];
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
-    @Min(0, { message: "package cost must be positive" })
+    @Min(0, { message: "Package cost must be more than 1" })
     packageCost: number;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
     productComponents: string[];
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
-    @Min(1, { message: "price must be positive" })
+    @Min(1, { message: "Price must be positive" })
     totalPrice: number;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
     adminId: string;
 
-    @Column({ nullable: false })
-    @IsNotEmpty()
+    @Prop({ default: true })
     isActive: boolean = true;
 
-    @Column({ nullable: true })
-    @IsNotEmpty()
+    @Prop({ required: false })
     isOnSale: boolean = false;
 
-    @Column({ nullable: true })
+    @Prop({ requiredIf: (product: Product) => product.isOnSale })
     @IsNotEmpty()
-    @Min(0, { message: "percentage cannot be negative" })
+    @Min(0, { message: "Percentage must be positive" })
     salePercentage: number = 0;
 
-    @Column({ nullable: false })
+    @Prop({ requiredIf: (product: Product) => product.isOnSale })
     @IsNotEmpty()
-    @Min(0, { message: "stoke cannot be negative" })
+    @Min(0, { message: "Stock quantity must be positive" })
     stockQuantity: number;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
     bussinesId: string;
 
-    @Column({ nullable: false })
+    @Prop({ required: true })
     @IsNotEmpty()
-    @Length(3, 15, { message: "status must be between 3 and 15 letters" })
+    @Length(3, 15, { message: "Status must be between 3 and 15 letters" })
     componentStatus: string;
 
 }
+
+export const ProductSchema = SchemaFactory.createForClass(Product);
