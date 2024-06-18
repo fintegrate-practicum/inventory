@@ -9,26 +9,19 @@ import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import  Button  from '@mui/material/Button';
 import Box from '@mui/material/Box';
-interface IFormInput {
-    Name: string;
-    Description: string;
-    Pictures: FileList | null;
-    Price:number;
 
-  }
 const AddProductForm=()=>{
-
   const productSchema = yup.object().shape({
-   Name: yup.string().required("Name is a required field").min(3, "Name must be at least 3 characters").max(20, "Name must be at most 20 characters"),
-   Description: yup.string().required("Description is a required field"),
-   Price: yup.string().required("price is a required field").matches(/^[0-9]{1,}$/, "price consists of numbers only"),
-   Pictures: yup.array().min(1, "must be at least 1").max(5, "must be at most 5").required('please select an image')
+    productName: yup.string().required("productName is a required field").min(3, "productName must be at least 3 characters").max(20, "Name must be at most 20 characters"),
+    productDescription: yup.string().required("productDescription is a required field"),
+    totalPrice: yup.string().required("totalPrice is a required field").matches(/^[0-9]{1,}$/, "price consists of numbers only"),
+    componentsImages: yup.array().min(1, "must be at least 1").max(5, "must be at most 5").required('please select an image')
 });
 
   const { register, handleSubmit, setValue, formState: { errors } } =
   useForm<IProduct>({ resolver:  yupResolver(productSchema) });
     const dispatch=useDispatch();
-    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const onSubmit: SubmitHandler<IProduct> = async (data) => {
       if (!selectedImages || selectedImages.length < 1 || selectedImages.length > 4) {
         console.error('Please select between 1 and 4 images.');
         return;
@@ -36,11 +29,11 @@ const AddProductForm=()=>{
       if (selectedImages) {
           try {
               const formData = new FormData();
-              formData.append('Name', data.Name);
-              formData.append('Description', data.Description);
-              formData.append('Price', data.Price.toString());
+              formData.append('Name', data.productName);
+              formData.append('Description', data.productDescription);
+              formData.append('Price', data.totalPrice.toString());
               Array.from(selectedImages).forEach((image) => {
-                  formData.append('Pictures', image);
+                  formData.append('componentsImages', image);
               });
           } catch (error) {
               console.error('שגיאה בהוספת מוצר:', error);
@@ -53,7 +46,7 @@ const AddProductForm=()=>{
     const navigate = useNavigate();
     const productState = useSelector((state: any) => state.product);
     const productComponents = productState.data.map((product: IProduct) => product.productComponents);
-    const [selectedImages, setSelectedImages] = useState<FileList | null>(null);
+    const [selectedImages, setSelectedImages] = useState<File[] | null>(null);
     const sumArrComponent=()=>{
       let sum=0;
       productComponents.forEach((component:IComponent)=>{
@@ -61,21 +54,19 @@ const AddProductForm=()=>{
       })
       return sum;
     }
-    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files) {
-        const files = event.target.files;
-        if (files.length > 4) {
-          console.error('Maximum of 4 images allowed.');
-          return;
-        }
-        setSelectedImages(files);
-      }
-  };
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      setSelectedImages(Array.from(files));
+        setValue('componentsImages', Array.from(files));
+    }
+};
     return (
          <form onSubmit={handleSubmit(onSubmit)}>
-             {!errors.Name?
+             {!errors.NamproductName?
                 <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
-                    <TextField id="outlined-basic" label="name" variant="outlined" {...register("Name")} />
+                    <TextField id="outlined-basic" label="name" variant="outlined" {...register("productName")} />
                 </Box>
                 :
                 <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
@@ -84,15 +75,15 @@ const AddProductForm=()=>{
                         id="outlined-error-helper-text"
                         label="name"
                         defaultValue="name"
-                        helperText={errors.Name.message}
-                        {...register("Name")}
+                        helperText={errors.productName.message}
+                        {...register("productName")}
                     />
                 </Box>
             }
 
-           {!errors.Description ?
+           {!errors.productDescription ?
                 <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
-                    <TextField id="outlined-basic" label="description" variant="outlined" {...register("Description")} />
+                    <TextField id="outlined-basic" label="description" variant="outlined" {...register("productDescription")} />
                 </Box>
                 :
                 <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
@@ -100,18 +91,19 @@ const AddProductForm=()=>{
                         error
                         id="outlined-error-helper-text"
                         label="description"
-                        defaultValue="Description"
-                        helperText={errors.Description.message}
-                        {...register("Description")}
+                        defaultValue="description"
+                        helperText={errors.productDescription.message}
+                        {...register("productDescription")}
                     />
                 </Box>
             }
             <Button variant="contained" color="success" onClick={()=>navigate('/')}>select components</Button>
             <div>{sumArrComponent()}</div>
-            <input type="file" accept="image/*" multiple {...register('Pictures',{min:1,max:4})} onChange={handleImageChange}/>
-            {!errors.Price ?
+            <input type="file" multiple onChange={handleImageChange} />
+            {errors.componentsImages && <p>{errors.componentsImages.message}</p>}
+            {!errors.totalPrice ?
                 <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
-                    <TextField id="outlined-basic" label="price" variant="outlined" {...register("Price")} />
+                    <TextField id="outlined-basic" label="price" variant="outlined" {...register("totalPrice")} />
                 </Box>
                 :
                 <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
@@ -120,8 +112,8 @@ const AddProductForm=()=>{
                         id="outlined-error-helper-text"
                         label="price"
                         defaultValue="price"
-                        helperText={errors.Price.message}
-                        {...register("Price")}
+                        helperText={errors.totalPrice.message}
+                        {...register("totalPrice")}
                     />
                 </Box>
             }
