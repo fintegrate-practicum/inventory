@@ -12,9 +12,9 @@ import Box from '@mui/material/Box';
 
 const AddProductForm=()=>{
   const productSchema = yup.object().shape({
-    productName: yup.string().required("productName is a required field").min(3, "productName must be at least 3 characters").max(20, "Name must be at most 20 characters"),
+    productName: yup.string().required("productName is a required field").min(3, "productName must be at least 3 characters").max(20, "productName must be at most 20 characters"),
     productDescription: yup.string().required("productDescription is a required field"),
-    totalPrice: yup.string().required("totalPrice is a required field").matches(/^[0-9]{1,}$/, "price consists of numbers only"),
+    totalPrice: yup.string().required("purchase price is a required field").matches(/^[0-9]+(\.[0-9]{1,2})?$/, "price must be a number"),
     componentsImages: yup.array().min(1, "must be at least 1").max(5, "must be at most 5").required('please select an image')
 });
 
@@ -22,10 +22,6 @@ const AddProductForm=()=>{
   useForm<IProduct>({ resolver:  yupResolver(productSchema) });
     const dispatch=useDispatch();
     const onSubmit: SubmitHandler<IProduct> = async (data) => {
-      if (!selectedImages || selectedImages.length < 1 || selectedImages.length > 4) {
-        console.error('Please select between 1 and 4 images.');
-        return;
-      }
       if (selectedImages) {
           try {
               const formData = new FormData();
@@ -58,15 +54,14 @@ const AddProductForm=()=>{
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      setSelectedImages(Array.from(files));
         setValue('componentsImages', Array.from(files));
     }
 };
     return (
          <form onSubmit={handleSubmit(onSubmit)}>
-             {!errors.NamproductName?
+             {!errors.productName?
                 <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
-                    <TextField id="outlined-basic" label="name" variant="outlined" {...register("productName")} />
+                    <TextField id="outlined-basic" label="productName" variant="outlined" {...register("productName")} />
                 </Box>
                 :
                 <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
