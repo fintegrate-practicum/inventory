@@ -1,6 +1,6 @@
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Product } from '../entities/Product';
+import { Product } from './product.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 /////for example only////////

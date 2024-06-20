@@ -3,7 +3,7 @@ import { Repository} from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt'; // Import JwtService from @nestjs/jwt
 import { ComponentService } from './component.service';
-import { Component } from '../entities/Component';
+import { Component } from './component.entity';
 
 describe('ProductService', () => {
   let service: ComponentService;
