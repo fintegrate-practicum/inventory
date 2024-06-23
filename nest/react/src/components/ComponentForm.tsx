@@ -2,12 +2,25 @@ import React, { useState } from "react";
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
-import FormData from 'form-data';
-import { IComponent } from '../interfaces/IComponent';
+import { useDispatch } from 'react-redux';
+import { addComponent } from '../features/component/componentSlice';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import './ComponentForm.css';
+import { addItem } from '../Api-Requests/genericRequests';
+import { IComponent } from "../interfaces/IComponent";
+
+
+interface IFormInput {
+    id: string;
+    name: string;
+    purchasePrice: number;
+    isAlone: boolean;
+    description?: string;
+    salePrice?: number;
+    images?: File[];
+}
 
 const notSaleAloneSchema = yup.object().shape({
     name: yup.string().required("name is a required field").min(3, "name must be at least 3 characters").max(20, "name must be at most 20 characters"),
@@ -21,32 +34,34 @@ const saleAloneSchema = yup.object().shape({
     isAlone: yup.boolean(),
     description: yup.string().required("description is a required field"),
     salePrice: yup.string()
-      .required("sale price is a required field")
-      .matches(/^[0-9]{1,}$/, "price consists of numbers only")
-      .test('is-greater-than', 'sale price must be greater than purchase price', function (value) {
-        const { purchasePrice } = this.parent;
-        const parsedSalePrice = parseFloat(value);
-        const parsedPurchasePrice = parseFloat(purchasePrice);
-        return parsedSalePrice > parsedPurchasePrice || parsedSalePrice === 0;
-      }),
-  
+        .required("sale price is a required field")
+        .matches(/^[0-9]{1,}$/, "price consists of numbers only")
+        .test('is-greater-than', 'sale price must be greater than purchase price', function (value) {
+            const { purchasePrice } = this.parent;
+            const parsedSalePrice = parseFloat(value);
+            const parsedPurchasePrice = parseFloat(purchasePrice);
+            return parsedSalePrice > parsedPurchasePrice || parsedSalePrice === 0;
+        }),
     images: yup.array().min(1, "must be at least 1").max(5, "must be at most 5").required('please select an image')
-  });
+});
 
 export const ComponentForm: React.FC<IComponent> = () => {
+    const dispatch = useDispatch();
     const [isAloneChecked, setIsAloneChecked] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const { register, handleSubmit, setValue, formState: { errors } } =
         useForm<IComponent>({ resolver: isAloneChecked ? yupResolver(saleAloneSchema) : yupResolver(notSaleAloneSchema) });
-
-    const save = (data: IComponent) => {
-        if (isAloneChecked) {
-            alert("ניתן למכירה בנפרד");
-        } else {
-            alert("לא ניתן למכירה בנפרד");
-        }
-    }
-
+        const save = async (data: IComponent) => {
+            try {
+                console.log('hiii');
+                
+                await addItem<IComponent>('component',data);
+                 dispatch(addComponent(data));
+    
+            } catch (error) {
+                console.error(error);
+            }
+        };
     const handleIsAloneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAloneChecked(event.target.checked);
     };
@@ -59,10 +74,10 @@ export const ComponentForm: React.FC<IComponent> = () => {
         }
     };
 
+    
+
     return (
-
         <form onSubmit={handleSubmit(save)}>
-
             {!errors.name ?
                 <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
                     <TextField id="outlined-basic" label="name" variant="outlined" {...register("name")} />
@@ -78,7 +93,6 @@ export const ComponentForm: React.FC<IComponent> = () => {
                         {...register("name")}
                     />
                 </Box>
-
             }
 
             {!errors.purchasePrice ?
@@ -96,15 +110,12 @@ export const ComponentForm: React.FC<IComponent> = () => {
                         {...register("purchasePrice")}
                     />
                 </Box>
-
             }
 
             <label>can be sold separately</label>
             <input type="checkbox" {...register("isAlone")}
                 checked={isAloneChecked}
                 onChange={handleIsAloneChange} />
-
-
 
             {isAloneChecked && (
                 <>
@@ -140,19 +151,15 @@ export const ComponentForm: React.FC<IComponent> = () => {
                                 {...register("salePrice")}
                             />
                         </Box>
-
                     }
 
                     <label>images</label>
                     <input type="file" multiple onChange={handleImageChange} />
                     {errors.images && <p>{errors.images.message}</p>}
-
                 </>
             )}
 
-            {/* <input type="submit" /> */}
-            <Button variant="outlined" type ="submit">save</Button>
-
+            <Button variant="outlined" type="submit">save</Button>
         </form>
     );
 }
