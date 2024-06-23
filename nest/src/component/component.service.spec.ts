@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Repository} from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ComponentService } from './component.service';
-import { Component } from '../entities/Component';
+import { Component } from './component.entity';
 
 describe('ProductService', () => {
   let service: ComponentService;
