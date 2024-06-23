@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProvidersController } from './providers.controller';
 import { ProvidersService } from './providers.service';
-import { Provider } from '../entities/Provider';
+import { Provider } from './provider.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 describe('ProviderController', () => {

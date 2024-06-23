@@ -2,7 +2,7 @@
 
 
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Provider } from '../entities/Provider';
+import { Provider } from './provider.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 // /////////////// for example only/////////////////////////

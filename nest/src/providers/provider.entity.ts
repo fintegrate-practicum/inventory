@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsEmail, Length } from 'class-validator';
 import { Document } from 'mongoose';
 
+
 @Schema()
 export class Provider extends Document {
     @Prop({ required: true, unique: true })
