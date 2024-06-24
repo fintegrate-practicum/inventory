@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Component, Product } from '../../App';
+import Tooltip from '@mui/material/Tooltip';
+import { IProduct } from '../../interfaces/IProduct';
+import { IComponent } from '../../interfaces/IComponent';
 
-const AllProducts: React.FunctionComponent<{ arrInventory: Product[] }> = ({ arrInventory }) => {
+const AllProducts: React.FunctionComponent<{ arrInventory: IProduct[], componentsArr: IComponent[] }> = ({ arrInventory, componentsArr }) => {
 
- const [selectedRows, setSelectedRows] = useState<string[]>([]);
-
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'productName', headerName: 'Name', width: 130 },
     { field: 'totalPrice', headerName: 'Price', type: 'number', width: 90 },
     {
       field: 'stockQuantity',
-      headerName: 'Count',
+      headerName: 'Qty',
       type: 'number',
       width: 90,
     },
@@ -21,19 +22,34 @@ const AllProducts: React.FunctionComponent<{ arrInventory: Product[] }> = ({ arr
       headerName: 'Components',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 250,
-      valueGetter: (params) => {
-        const components: Component[] = params as Component[];
-        if (!components || components.length === 0) {
+      width: 220,
+      renderCell: (params) => {
+        const product = params.row as IProduct;
+        if (!product || !product.productComponents || product.productComponents.length === 0) {
           return 'No Components';
         }
-       return components.map(component => `${component.name} `);
+     
+        return (
+          <>
+            <Tooltip title={"..."} arrow>
+              <span key={product.id}>{
+                product.productComponents.map((componentId, index) => {
+                  const singleComponent = componentsArr.find((comp) => comp.id === componentId);
+                  const componentName = singleComponent ? singleComponent.componentName : 'Unknown Component';  
+                  return (
+                    <span key={index}>{componentName}, </span>
+                  );
+                })
+              } </span>
+            </Tooltip>
+          </>
+        );
       },
-
     },
+
   ];
   const handleRowSelectionChange = (selection: any) => {
-    setSelectedRows(selection.rows.map((row: any) => row.id));
+    selection.rows && setSelectedRows(selection.rows.map((row: any) => row.id));
   };
   return (
     <div style={{ height: 400, width: '100%' }}>

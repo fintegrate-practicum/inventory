@@ -1,19 +1,17 @@
 import {expect, describe, it} from  'vitest';
 import {fireEvent, render, screen } from '@testing-library/react';
 import AllProducts from './AllProducts';
-import {Product} from '../../App';
 import { error } from 'console';
+import { IProduct } from '../../interfaces/IProduct';
+import { IComponent } from '../../interfaces/IComponent';
 
-const mockProducts: Product[] = [
+const mockProducts: IProduct[] = [
     {
       id: '1',
       productName: 'Table',
       productDescription: 'Some description',
       componentsImages: [],
-      productComponents: [
-        { name: 'Table Leg', price: 10 },
-        { name: 'Table Top', price: 20 },
-      ],
+      productComponents: ["10", "11","12"],
       packageCost: 100,
       totalPrice: 300,
       adminId: '12',
@@ -29,7 +27,7 @@ const mockProducts: Product[] = [
       productName: 'Chair',
       productDescription: 'Another description',
       componentsImages: [],
-      productComponents: [{ name: 'Chair Leg', price: 5 }],
+      productComponents: ["12", "13"],
       packageCost: 50,
       totalPrice: 100,
       adminId: '15',
@@ -41,31 +39,116 @@ const mockProducts: Product[] = [
       componentStatus: '',
     },
   ];
-  
+const mockComponents:IComponent[]=
+[{
+   id:"11",
+   componentName: "table leg",
+   componentBuyPrice: 80,
+   addingComponentDate: new Date(),
+   minQuantity: 3,
+   componentStock: 5,
+   isActive: true,
+   adminId: "132",
+   isSoldSeparately: false,
+   componentDescription: "jhgjgfnvnbvn",
+   salePrice: 120,
+   componentImages: ["https://www.shw.co.il/media/catalog/product/cache/82b780ee7d6ec5acf040ed4b1a996b50/b/o/boliver-small.png",""],
+   isInSale: true,
+   salePercentage: 20,
+   componentColor: "",
+   componentSize:"120",
+   bussinesId: "",
+},
+{
+   id:"12",
+   componentName: "table top",
+   componentBuyPrice: 150,
+   addingComponentDate: new Date(),
+   minQuantity: 3,
+   componentStock: 5,
+   isActive: true,
+   adminId: "132",
+   isSoldSeparately: false,
+   componentDescription: "jhgfdxbnbvnbvnbnvv",
+   salePrice: 120,
+   componentImages: ["https://topcommerce.co.il/wp-content/uploads/2020/11/%D7%A9%D7%95%D7%9C%D7%97%D7%9F-%D7%9E%D7%A9%D7%A8%D7%93%D7%99-%D7%AA%D7%9C%D7%9E%D7%99%D7%93-%D7%93%D7%92%D7%9D-%D7%90%D7%91%D7%A0%D7%A8-2280.jpg",""],
+   isInSale: true,
+   salePercentage: 20,
+   componentColor: "",
+   componentSize:"120",
+   bussinesId: "",
+},
+{
+ id:"10",
+ componentName: "table leg",
+ componentBuyPrice: 120,
+ addingComponentDate: new Date(),
+ minQuantity: 3,
+ componentStock: 5,
+ isActive: true,
+ adminId: "132",
+ isSoldSeparately: false,
+ componentDescription: "kjhgfmnbvmnbvcjhgfd",
+ salePrice: 120,
+ componentImages: ["",""],
+ isInSale: true,
+ salePercentage: 20,
+ componentColor: "",
+ componentSize:"120",
+ bussinesId: "",
+},
+{
+ id:"13",
+ componentName: "table leg",
+ componentBuyPrice: 80,
+ addingComponentDate: new Date(),
+ minQuantity: 3,
+ componentStock: 5,
+ isActive: true,
+ adminId: "132",
+ isSoldSeparately: false,
+ componentDescription: "",
+ salePrice: 120,
+ componentImages: ["",""],
+ isInSale: true,
+ salePercentage: 20,
+ componentColor: "",
+ componentSize:"120",
+ bussinesId: "",
+},
+]
 describe('AllProducts component', () => {
   it('renders product columns with correct headers', () => {
-    render(<AllProducts arrInventory={mockProducts} />);
+    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents}/>);
 
     expect(screen.getByText('ID')).toBeInTheDocument();
     expect(screen.getByText('Name')).toBeInTheDocument();
     expect(screen.getByText('Price')).toBeInTheDocument();
-    expect(screen.getByText('Count')).toBeInTheDocument();
+    expect(screen.getByText('Qty')).toBeInTheDocument();
     expect(screen.getByText('Components')).toBeInTheDocument();
   });
 
-  it('renders "No Components" text when product has no components', () => {
-    const mockProductWithoutComponents = {
+it('displays "No Components" when there are no components for a product', () => {
+    const mockProductWithoutComponents: IProduct = {
       ...mockProducts[0],
       productComponents: [],
     };
 
-    render(<AllProducts arrInventory={[mockProductWithoutComponents]} />);
-
+    render(<AllProducts arrInventory={[mockProductWithoutComponents]} componentsArr={mockComponents} />);  
     expect(screen.getByText('No Components')).toBeInTheDocument();
   });
-  it('displays product details in corresponding cells', () => {
-    render(<AllProducts arrInventory={mockProducts} />);
 
+//   it('displays tooltip when hovering over components', async () => {
+//     render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents} />);
+  
+//     const componentCell = screen.getByText('table leg'); // Example component name
+//     fireEvent.mouseOver(componentCell);
+  
+//     await screen.findByText('Tooltip content'); // Replace with actual tooltip content verification
+//   });
+
+  it('displays product details in corresponding cells', () => {
+    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents}/>);
     // Product 1 (Table)
     const tableIdCell = screen.getByText('1');
     const tableNameCell = screen.getByText('Table');
@@ -89,8 +172,18 @@ describe('AllProducts component', () => {
     expect(chairStockCell).toBeInTheDocument();
   });
 
+  it('sorts products correctly by price', async () => {
+    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents} />);
+  
+    const priceHeader = screen.getByText('Price');
+    fireEvent.click(priceHeader);
+    // Check if products are sorted by price in ascending order
+    const firstProductPriceCell = screen.getByText('100'); // Assuming 100 is the lowest price in mock data
+    expect(firstProductPriceCell).toBeInTheDocument();
+  });
+
   it('renders pagination controls', () => {
-    render(<AllProducts arrInventory={mockProducts} />);
+    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents}/>);
   
     const nextPageButton = screen.getByRole('button', { name: 'Go to next page' });
     const previousPageButton = screen.getByRole('button', { name: 'Go to previous page' });
@@ -100,7 +193,7 @@ describe('AllProducts component', () => {
   });
   
   it('changes page when pagination controls are clicked', async () => {
-    render(<AllProducts arrInventory={mockProducts} />);
+    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents}/>);
   
     const nextPageButton = screen.getByRole('button', { name: 'Go to next page' });
     fireEvent.click(nextPageButton);

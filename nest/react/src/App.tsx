@@ -1,37 +1,19 @@
-import { useState } from 'react';
 import './App.css';
 import AllProducts from './components/tableInventory/AllProducts';
+import { useSelector } from 'react-redux';
+import{RootState} from './app/store';
+import { IProduct } from './interfaces/IProduct';
+import { IComponent } from './interfaces/IComponent';
 
-
- export interface Component {
-  //בשביל התחלה....
-  name: string;
-  price: number;
-
-}
-export interface Product {
-  id: string;
-  productName: string;
-  productDescription: string;
-  componentsImages: string[];
-  productComponents: Component[];
-  packageCost: number;
-  totalPrice: number;
-  adminId: string;
-  isActive: boolean;
-  isOnSale: boolean;
-  salePercentage: number;
-  stockQuantity: number;
-  bussinesId: string;
-  componentStatus: string;
-}
 function App() {
-  const [arrInventory, setArrInventory] = useState<Product[]>([
-    {id: "1",
+//מערכי דמה של מוצרים ורכיבים לתצוגה ראשונית
+  const arrInventory:IProduct[]=
+   [ 
+      {id: "1",
       productName: "table",
       productDescription:"mnbvcx",
       componentsImages: [],
-      productComponents: [{ name: "table leg", price: 10 }, { name: "table leg", price: 10 }],
+      productComponents: ["10", "11","14","12"],
       packageCost: 100,
       totalPrice: 300,
       adminId: "12",
@@ -45,7 +27,7 @@ function App() {
       productName: "table",
       productDescription:"aaaaaaaaaaaa",
       componentsImages: [],
-      productComponents: [{ name: "table leg", price: 10 }, { name: "table leg", price: 10 }],
+      productComponents: ["12", "13"],
       packageCost: 100,
       totalPrice: 200,
       adminId: "12",
@@ -54,12 +36,112 @@ function App() {
       salePercentage: 10,
       stockQuantity: 50,
       bussinesId: "44",
-      componentStatus: ""},
-  ])
+      componentStatus: ""}
+];
+const componentsArr:IComponent[]=
+[{
+    id:"11",
+    componentName: "table leg",
+    componentBuyPrice: 80,
+    addingComponentDate: new Date(),
+    minQuantity: 3,
+    componentStock: 5,
+    isActive: true,
+    adminId: "132",
+    isSoldSeparately: false,
+    componentDescription: "jhgjgfnvnbvn",
+    salePrice: 120,
+    componentImages: ["https://www.shw.co.il/media/catalog/product/cache/82b780ee7d6ec5acf040ed4b1a996b50/b/o/boliver-small.png",""],
+    isInSale: true,
+    salePercentage: 20,
+    componentColor: "",
+    componentSize:"120",
+    bussinesId: "",
+},
+{
+    id:"12",
+    componentName: "table top",
+    componentBuyPrice: 150,
+    addingComponentDate: new Date(),
+    minQuantity: 3,
+    componentStock: 5,
+    isActive: true,
+    adminId: "132",
+    isSoldSeparately: false,
+    componentDescription: "jhgfdxbnbvnbvnbnvv",
+    salePrice: 120,
+    componentImages: ["https://topcommerce.co.il/wp-content/uploads/2020/11/%D7%A9%D7%95%D7%9C%D7%97%D7%9F-%D7%9E%D7%A9%D7%A8%D7%93%D7%99-%D7%AA%D7%9C%D7%9E%D7%99%D7%93-%D7%93%D7%92%D7%9D-%D7%90%D7%91%D7%A0%D7%A8-2280.jpg",""],
+    isInSale: true,
+    salePercentage: 20,
+    componentColor: "",
+    componentSize:"120",
+    bussinesId: "",
+},
+{
+  id:"10",
+  componentName: "table leg",
+  componentBuyPrice: 120,
+  addingComponentDate: new Date(),
+  minQuantity: 3,
+  componentStock: 5,
+  isActive: true,
+  adminId: "132",
+  isSoldSeparately: false,
+  componentDescription: "kjhgfmnbvmnbvcjhgfd",
+  salePrice: 120,
+  componentImages: ["",""],
+  isInSale: true,
+  salePercentage: 20,
+  componentColor: "",
+  componentSize:"120",
+  bussinesId: "",
+},
+{
+  id:"13",
+  componentName: "table leg",
+  componentBuyPrice: 80,
+  addingComponentDate: new Date(),
+  minQuantity: 3,
+  componentStock: 5,
+  isActive: true,
+  adminId: "132",
+  isSoldSeparately: false,
+  componentDescription: "",
+  salePrice: 120,
+  componentImages: ["",""],
+  isInSale: true,
+  salePercentage: 20,
+  componentColor: "",
+  componentSize:"120",
+  bussinesId: "",
+},
+{
+  id:"14",
+  componentName: "table leg",
+  componentBuyPrice: 80,
+  addingComponentDate: new Date(),
+  minQuantity: 3,
+  componentStock: 5,
+  isActive: true,
+  adminId: "132",
+  isSoldSeparately: false,
+  componentDescription: "",
+  salePrice: 120,
+  componentImages: ["",""],
+  isInSale: true,
+  salePercentage: 20,
+  componentColor: "",
+  componentSize:"120",
+  bussinesId: "",
+}
+]
 
+  const products = useSelector<RootState,IProduct[]>((state) => state.product.data);
+  const components = useSelector<RootState,IComponent[]>((state)=>state.component.data);
   return (
     <>
-      <AllProducts arrInventory={arrInventory} />
+      <AllProducts arrInventory={arrInventory} componentsArr={componentsArr} />
+      {/* <AllProducts arrInventory={products} componentsArr={components} /> */}
     </>
   )
 }
