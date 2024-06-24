@@ -119,7 +119,7 @@ const mockComponents:IComponent[]=
 ]
 describe('AllProducts component', () => {
   it('renders product columns with correct headers', () => {
-    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents}/>);
+    render(<AllProducts productsArr={mockProducts} componentsArr={mockComponents}/>);
 
     expect(screen.getByText('ID')).toBeInTheDocument();
     expect(screen.getByText('Name')).toBeInTheDocument();
@@ -134,21 +134,12 @@ it('displays "No Components" when there are no components for a product', () => 
       productComponents: [],
     };
 
-    render(<AllProducts arrInventory={[mockProductWithoutComponents]} componentsArr={mockComponents} />);  
+    render(<AllProducts productsArr={[mockProductWithoutComponents]} componentsArr={mockComponents} />);  
     expect(screen.getByText('No Components')).toBeInTheDocument();
   });
 
-//   it('displays tooltip when hovering over components', async () => {
-//     render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents} />);
-  
-//     const componentCell = screen.getByText('table leg'); // Example component name
-//     fireEvent.mouseOver(componentCell);
-  
-//     await screen.findByText('Tooltip content'); // Replace with actual tooltip content verification
-//   });
-
   it('displays product details in corresponding cells', () => {
-    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents}/>);
+    render(<AllProducts productsArr={mockProducts} componentsArr={mockComponents}/>);
     // Product 1 (Table)
     const tableIdCell = screen.getByText('1');
     const tableNameCell = screen.getByText('Table');
@@ -173,7 +164,7 @@ it('displays "No Components" when there are no components for a product', () => 
   });
 
   it('sorts products correctly by price', async () => {
-    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents} />);
+    render(<AllProducts productsArr={mockProducts} componentsArr={mockComponents} />);
   
     const priceHeader = screen.getByText('Price');
     fireEvent.click(priceHeader);
@@ -183,7 +174,7 @@ it('displays "No Components" when there are no components for a product', () => 
   });
 
   it('renders pagination controls', () => {
-    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents}/>);
+    render(<AllProducts productsArr={mockProducts} componentsArr={mockComponents}/>);
   
     const nextPageButton = screen.getByRole('button', { name: 'Go to next page' });
     const previousPageButton = screen.getByRole('button', { name: 'Go to previous page' });
@@ -193,7 +184,7 @@ it('displays "No Components" when there are no components for a product', () => 
   });
   
   it('changes page when pagination controls are clicked', async () => {
-    render(<AllProducts arrInventory={mockProducts} componentsArr={mockComponents}/>);
+    render(<AllProducts productsArr={mockProducts} componentsArr={mockComponents}/>);
   
     const nextPageButton = screen.getByRole('button', { name: 'Go to next page' });
     fireEvent.click(nextPageButton);

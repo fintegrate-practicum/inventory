@@ -4,7 +4,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { IProduct } from '../../interfaces/IProduct';
 import { IComponent } from '../../interfaces/IComponent';
 
-const AllProducts: React.FunctionComponent<{ arrInventory: IProduct[], componentsArr: IComponent[] }> = ({ arrInventory, componentsArr }) => {
+const AllProducts: React.FunctionComponent<{ productsArr: IProduct[], componentsArr: IComponent[] }> = ({ productsArr, componentsArr }) => {
 
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const columns: GridColDef[] = [
@@ -54,7 +54,7 @@ const AllProducts: React.FunctionComponent<{ arrInventory: IProduct[], component
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={arrInventory}
+        rows={productsArr}
         columns={columns}
         onRowSelectionModelChange={handleRowSelectionChange}//(בודק אם שורה נבחרה (בשביל הוספת מוצר
         initialState={{
