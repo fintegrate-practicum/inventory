@@ -7,7 +7,7 @@ import CardOverflow from '@mui/joy/CardOverflow';
 import Typography from '@mui/joy/Typography';
 import { IProduct } from '../../interfaces/IProduct'
 
-const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
+const SingleProduct: React.FC<{ product: IProduct }> = ({ product }) => {
   return (
     <Card sx={{ width: 200, maxWidth: '100%', boxShadow: 'lg', margin: 2 }}>
       <CardOverflow>
@@ -34,4 +34,4 @@ const ProductCard: React.FC<{ product: IProduct }> = ({ product }) => {
     </Card>
   );
 }
-export default ProductCard;
+export default SingleProduct;
