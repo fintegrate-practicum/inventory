@@ -1,14 +1,17 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 import DeleteProduct from './components/DeleteProduct';
+import SpacingGrid from './components/showProducts/AllProductEx'
+// import ImageViewer from './components/showProducts/custom.slider'
+import EnhancedTable from './components/ex'
+
 
 function App() {
-  const [count, setCount] = useState(0);
   return (
     <>
-<DeleteProduct/>
+      {/* <DeleteProduct/> */}
+      {/* <SpacingGrid /> */}
+      {/* <ImageViewer/> */}
+      <EnhancedTable/>
     </>
   )
 }

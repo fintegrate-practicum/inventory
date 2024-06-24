@@ -4,9 +4,11 @@ import { ConfigService } from '@nestjs/config';
 const connectDB = async () => {
     try {
         const configService = new ConfigService();
-        await mongoose.connect(configService.get<string>('MONGO_URI'), {
-            dbName: configService.get<string>('DB_NAME'),
-        });
+        // await mongoose.connect(configService.get<string>('MONGO_URI'), {
+        //     dbName: configService.get<string>('DB_NAME'),
+        // }
+        await mongoose.connect("mongodb://localhost:27017");
+
         console.log('MongoDB Connected Successfully');
     } catch (error) {
         console.log("MongoDB Not Connected "+error);

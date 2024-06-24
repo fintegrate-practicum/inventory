@@ -8,8 +8,7 @@ dotenv.config();
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
+	//connectDB();
 	await app.listen(3000);
-	connectDB();
-	
 }
 bootstrap();
