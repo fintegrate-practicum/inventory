@@ -1,33 +1,34 @@
 import { useState, useEffect } from 'react';
 import Grid from '@mui/joy/Grid';
-import ProductCard from './signleProduct';
+import ProductCard from './singleProduct';
 import { IProduct } from '../../interfaces/IProduct';
 import { getAllItems } from '../../Api-Requests/genericRequests';
+import { useDispatch } from 'react-redux';
+import { getProducts } from '../../features/product/productSlice';
 
-export default function SpacingGrid() {
-  const [spacing, setSpacing] = useState(2);
+export default function ShowProducts() {
   const [products, setProducts] = useState<IProduct[]>([]);
+  const dispatch = useDispatch();
 
-  const getProducts = async () => {
+  const getAllProducts = async () => {
     try {
       const res = await getAllItems<IProduct>('product');
-
-      //setProducts([res.data]);
-      setProducts((prevProducts) => [...prevProducts, {...res.data}]);
-      console.log(res.data);
+      setProducts((prevProducts) => [...prevProducts, { ...res.data }]);
+      dispatch(getProducts(products));
     }
     catch (err) {
-      alert(err);
+      console.log(err);
     }
   }
 
   useEffect(() => {
-    getProducts();
+    getAllProducts();
   }, []);
+
 
   return (
     <Grid sx={{ flexGrow: 1 }} container spacing={2}>
-      <Grid container justifyContent="center" spacing={spacing}>
+      <Grid container justifyContent="center">
         {products.map((product: IProduct) => (
           <ProductCard key={product.id} product={product} />
         ))}
