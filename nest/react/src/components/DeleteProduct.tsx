@@ -26,22 +26,16 @@ const DeleteProduct = ({item}:any) => {
     };
 
     const deleteProduct = async () => {
-
         try {
-          
             let response=await deleteItem("product",item.id); 
             alert("המחיקה בוצעה בהצלחה")
             console.log(response);
-
         }
         catch (err) {
             console.log(err);
         }
-
-        //מחיקה מהרידקס
         dispatch(deleteProductFromState(item.id))
         setOpen(false);
-
     }
 
 

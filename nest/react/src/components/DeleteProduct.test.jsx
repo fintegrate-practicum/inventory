@@ -1,36 +1,26 @@
 import React from 'react';
-// import { render, fireEvent, waitFor, screen } from 'vtest';
-import {expect, describe, it} from  'vitest';
-import {fireEvent, render,waitFor, screen } from '@testing-library/react';
+import { expect, describe, it } from 'vitest';
+import { fireEvent, render, waitFor, screen } from '@testing-library/react';
 import DeleteProduct from './DeleteProduct';
-import { error, log } from 'console';
-import { Provider } from "react-redux";
-import {store as appStore} from "../app/store"
 import renderWithProviders from "./utils-for-tests.jsx"
 
 
 
 describe('DeleteProduct component', () => {
 
-it('DeleteProduct component test', async () => {
-  const item = { id: 1, productName: 'Test Product' };
- 
-  renderWithProviders(  <DeleteProduct item={item} />);
+  it('DeleteProduct component test', async () => {
+    const item = { id: 1, productName: 'Test Product' };
 
-  const deleteButton = screen.getByText('Delete');
-  fireEvent.click(deleteButton);
+    renderWithProviders(<DeleteProduct item={item} />);
 
-  const dialogTitle = screen.getByText('Are you sure you want to delete this product?');
-  expect(dialogTitle).toBeInTheDocument();
+    const deleteButton = screen.getByText('Delete');
+    fireEvent.click(deleteButton);
 
-  const deleteButtonInDialog = screen.getByText('delete');
-  fireEvent.click(deleteButtonInDialog);
+    const dialogTitle = screen.getByText('Are you sure you want to delete this product?');
+    expect(dialogTitle).toBeInTheDocument();
 
-  // await waitFor(() => {
-  //   expect(screen.getByText('המחיקה בוצעה בהצלחה')).toBeInTheDocument();
-  // });
-});
-
-// console.log(error)
+    const deleteButtonInDialog = screen.getByText('delete');
+    fireEvent.click(deleteButtonInDialog);
+  });
 })
 
