@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Delete, Body, Post, Put,Headers } from '@nestjs/common';
 import { ProvidersService } from './providers.service';
-import { Provider } from '../entities/Provider';
+import { Provider } from './provider.entity';
 
 @Controller('api/inventory/providers')
 export class ProvidersController {

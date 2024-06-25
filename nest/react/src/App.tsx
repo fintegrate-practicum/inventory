@@ -1,18 +1,14 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+// import { useState } from 'react';
+// import reactLogo from './assets/react.svg';
+// import viteLogo from '/vite.svg';
 import './App.css';
-import DeleteProduct from './components/DeleteProduct';
+// import DeleteProduct from './components/DeleteProduct';
 
 function App() {
-  const [count, setCount] = useState(0);
   return (
     <>
-    
-      <DeleteProduct/>
-
     </>
-  )
+  );
 }
 export default App
 

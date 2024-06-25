@@ -3,7 +3,7 @@ import { ProductsController } from './products.controller';
 import { ProductService } from './products.service'; // ודאי שהתלתות הזו מוגדרת
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Product } from '../entities/Product';
+import { Product } from './product.entity';
 
 describe('ProductController', () => {
   let controller: ProductsController;
