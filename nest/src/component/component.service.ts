@@ -1,53 +1,45 @@
 import { Injectable, ForbiddenException, BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
 import { Component } from './component.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 // /////////////// for example only/////////////////////////
 @Injectable()
 export class ComponentService {
- 
-  constructor(
-   @InjectRepository(Component)
-    private readonly componentRepository: Repository<Component>) { } 
 
+  constructor(@InjectModel(Component.name) private readonly componentModel: Model<Component>) { }
 
-  async addNewComponent(elementData: Component,adminId:string): Promise<any> {
-// adminId-token
+  async addNewComponent(elementData: Component, adminId: string): Promise<Component> {
+    // adminId-token
     if (!this.userHasBusinessManagerPermission(adminId)) {
       throw new ForbiddenException('Insufficient permissions to add a new site element.');
     }
 
-
-    if (!elementData.componentName || !elementData.componentBuyPrice ||!elementData.minQuantity) {
+    if (!elementData.componentName || !elementData.componentBuyPrice || !elementData.minQuantity) {
       throw new BadRequestException('Mandatory fields missing for adding a new site element.');
     }
-    const savedElement = await this.componentRepository.create(elementData);
+    const savedElement = await this.componentModel.create(elementData);
 
     return savedElement;
-
-     
   }
 
-  async getAllComponents(): Promise<any[]> {
+  async getAllComponents(): Promise<Component[]> {
     // adminId-token
-    const components = await this.componentRepository.findBy({ isActive: true});
+    const components = await this.componentModel.find({ isActive: true });
     return components;
   }
-  
-  async getComponentById(componentId: string): Promise<any[]> {
-    const component = await this.componentRepository.findBy({isActive: true,id:componentId} );
-  
-    if (!component) 
+
+  async getComponentById(componentId: string): Promise<Component> {
+    const component = await this.componentModel.findOne({ isActive: true, id: componentId });
+
+    if (!component)
       throw new NotFoundException('component not found.');
 
     return component;
   }
-  
 
-  async updateComponent(componentId: string, updatedFields: any,adminId:string): Promise<any> {
+  async updateComponent(componentId: Types.ObjectId, updatedFields: any, adminId: string): Promise<Component> {
 
-    const component = await this.componentRepository.findOneBy({id:componentId,isActive:true});
-
+    const component = await this.componentModel.findOne({ id: componentId, isActive: true });
 
     if (!component) {
       throw new NotFoundException('component not found.');
@@ -59,16 +51,16 @@ export class ComponentService {
     if (component.adminId !== adminId) {
       throw new ForbiddenException('You are not authorized to update this component.');
     }
-//משנה את השדות שכבר קיימים לפי הערכים החדשים ושדות שלא קיימים - מוסיף אותם
-//אין אבטחה לגבי השדות החדשים שמוסיף
+    //משנה את השדות שכבר קיימים לפי הערכים החדשים ושדות שלא קיימים - מוסיף אותם
+    //אין אבטחה לגבי השדות החדשים שמוסיף
     Object.assign(component, updatedFields);
 
-    const updatedComponent=await this.componentRepository.save(component);
+    const updatedComponent = await this.componentModel.create(component);
     return updatedComponent;
   }
-  
- async softDeleteComponent(componentId: string,adminId:string): Promise<void> {
-    const component = await this.componentRepository.findOneBy({id:componentId});
+
+  async softDeleteComponent(componentId: Types.ObjectId, adminId: string): Promise<void> {
+    const component = await this.componentModel.findOne({ id: componentId });
 
     if (!component) {
       throw new NotFoundException('Component not found');
@@ -80,15 +72,14 @@ export class ComponentService {
     }
 
     component.isActive = false;
-    await this.componentRepository.save(component);
+    await this.componentModel.create(component);
   }
-
 
   private async checkComponentOrderedByUser(componentId: string): Promise<boolean> {
     //פה צריך לבדוק האם המשתמש הזמין את ההזמנה
     return true;
   }
-  private userHasBusinessManagerPermission(adminId: string): boolean {
+  public userHasBusinessManagerPermission(adminId: string): boolean {
     //  פה צריך לבדוק האם למנהל יש  הרשאת גישה  מהמנהל
     return true;
   }

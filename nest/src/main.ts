@@ -9,7 +9,8 @@ dotenv.config();
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 	await app.listen(3000);
+	console.log('app is listening on port 3000');
 	connectDB();
-	
+
 }
 bootstrap();
