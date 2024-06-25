@@ -11,12 +11,10 @@ import { ProviderModule } from './provider/provider.module';
 	imports: [
 		ConfigModule.forRoot({ envFilePath: '.env' }),
 		MongooseModule.forRoot(process.env.MONGO_URI),
-
-		ComponentModule, ProductModule, ProviderModule],
+		ComponentModule, ProductModule, ProviderModule
+	],
 	controllers: [AppController],
 	providers: [AppService],
 
 })
-export class AppModule {
-
-}
+export class AppModule {}
