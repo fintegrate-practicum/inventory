@@ -32,7 +32,6 @@ const saleAloneSchema = yup.object().shape({
   });
 export const ComponentForm: React.FC<IComponent> = () => {
     const [isAloneChecked, setIsAloneChecked] = useState(false);
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const { register, handleSubmit, setValue, formState: { errors } } =
         useForm<IComponent>({ resolver: isAloneChecked ? yupResolver(saleAloneSchema) : yupResolver(notSaleAloneSchema) });
     const save = (data: IComponent) => {
@@ -48,7 +47,6 @@ export const ComponentForm: React.FC<IComponent> = () => {
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
-            setSelectedFiles(Array.from(files));
             setValue('images', Array.from(files));
         }
     };

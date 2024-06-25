@@ -42,7 +42,6 @@ const AddProductForm=()=>{
     const navigate = useNavigate();
     const productState = useSelector((state: any) => state.product);
     const productComponents = productState.data.map((product: IProduct) => product.productComponents);
-    const [selectedImages, setSelectedImages] = useState<File[] | null>(null);
     const sumArrComponent=()=>{
       let sum=0;
       productComponents.forEach((component:IComponent)=>{
