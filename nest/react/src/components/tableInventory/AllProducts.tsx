@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Tooltip from '@mui/material/Tooltip';
 import { IProduct } from '../../interfaces/IProduct';
 import { IComponent } from '../../interfaces/IComponent';
 
 const AllProducts: React.FunctionComponent<{ productsArr: IProduct[], componentsArr: IComponent[] }> = ({ productsArr, componentsArr }) => {
-
+  const componentMap: { [key: string]: string } = useMemo(() => componentsArr.reduce((acc, item) => ({ ...acc, [item.id]: item.componentName }), {}), [componentsArr]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -28,19 +28,17 @@ const AllProducts: React.FunctionComponent<{ productsArr: IProduct[], components
         if (!product || !product.productComponents || product.productComponents.length === 0) {
           return 'No Components';
         }
-     
         return (
           <>
             <Tooltip title={"..."} arrow>
-              <span key={product.id}>{
-                product.productComponents.map((componentId, index) => {
-                  const singleComponent = componentsArr.find((comp) => comp.id === componentId);
-                  const componentName = singleComponent ? singleComponent.componentName : 'Unknown Component';  
+              <span key={product.id}>
+                {product.productComponents.map((componentId, index) => {
+                  const componentName = componentMap[componentId] || 'Unknown Component';
                   return (
                     <span key={index}>{componentName}, </span>
                   );
-                })
-              } </span>
+                })}
+              </span>
             </Tooltip>
           </>
         );
