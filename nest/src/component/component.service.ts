@@ -8,19 +8,34 @@ export class ComponentService {
 
   constructor(@InjectModel(Component.name) private readonly componentModel: Model<Component>) { }
 
-  async addNewComponent(elementData: Component, adminId: string): Promise<Component> {
-    // adminId-token
-    if (!this.userHasBusinessManagerPermission(adminId)) {
-      throw new ForbiddenException('Insufficient permissions to add a new site element.');
-    }
-
-    if (!elementData.componentName || !elementData.componentBuyPrice || !elementData.minQuantity) {
-      throw new BadRequestException('Mandatory fields missing for adding a new site element.');
-    }
-    const savedElement = await this.componentModel.create(elementData);
-
-    return savedElement;
-  }
+  
+    async addNewComponent(ComponentData:any,adminId:string): Promise<any> {
+      try{ 
+        if (!this.userHasBusinessManagerPermission(adminId)) {//אמור לשלוף אותו מהטוקן
+        throw new ForbiddenException('Insufficient permissions to add a new component.');
+      }
+       await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
+      let newComponent = this.componentModel.create({...ComponentData,isActive:true});
+      return newComponent;
+      }
+      catch(err){
+        console.log(err);
+        throw new ConflictException('service component sorry cannot add component');
+      }}
+      //פונקציה לולידציות על הקלט
+      private async validateParams(newComponent:Component) {
+        try{
+          let sameComponent=await this.componentModel.findOne({componentName:newComponent.componentName,isActive:true})
+      if(sameComponent)
+        throw new ConflictException('there is already same component');
+         
+        }
+        catch(err){ 
+          console.log(err);
+          throw new ConflictException('validateParams-sorry Something went wrong cannot add component');
+      
+          }  
+        }
 
   async getAllComponents(): Promise<Component[]> {
     // adminId-token

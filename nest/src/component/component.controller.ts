@@ -1,7 +1,10 @@
-import { Controller, Param, Delete, Post, Put, Body, Get, Headers } from '@nestjs/common';
+import { Controller, Post, Body, Headers,Delete,Put,Get, HttpException, HttpStatus, ValidationPipe,Param } from '@nestjs/common';
 import { ComponentService } from './component.service';
 import { Component } from './component.entity';
 import { Types } from 'mongoose';
+import * as Joi from '@hapi/joi';
+import {componentValidationSchema} from "./component.validate"
+
 
 @Controller('api/inventory/component')
 export class ComponentController {
@@ -17,16 +20,25 @@ export class ComponentController {
   @Post()
   async addNewComponent(@Headers('x-access-token') token: string, @Body() newComponent: Component) {
     try {
-      console.log("controller component");
-      await this.componentService.addNewComponent(newComponent, token);
-      return { message: 'Component  added successfully' };
-    }
+      componentValidationSchema.validate(newComponent);//בדיקה ע"י סכמה joi
+      await this.componentService.addNewComponent(newComponent, token);//שליחה לפונקציה של Service
+      return { message: 'component added succesfully' };
+    } 
     catch (err) {
-      console.log("cannot add !!" + err);
+      if (err instanceof Joi.ValidationError) {//בדיקה האם השגיאה קשורה לולידציה של הקלט
+        const errors = err.details.map((detail) => ({
+          path: detail.path.join('.'),
+          message: detail.message,
+        }));
+        throw new HttpException({ errors }, HttpStatus.BAD_REQUEST);
+      } 
+      else {
+        console.error('Error adding component:', err);
+        throw new HttpException('Error adding component', HttpStatus.BAD_REQUEST);
+      }
     }
-
   }
-
+  
   @Put(':componentId')
   updateComponent(@Headers('x-access-token') token: string, @Param('componentId') componentId: Types.ObjectId, updatedFields: any) {
     return this.componentService.updateComponent(componentId, updatedFields, token);

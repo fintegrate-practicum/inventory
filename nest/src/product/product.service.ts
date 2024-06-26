@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { Product } from './product.entity';
-import { productValidationSchema } from '../entities/Product.validate';
+import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 /////for example only////////
