@@ -32,21 +32,25 @@ const saleAloneSchema = yup.object().shape({
   });
 export const ComponentForm: React.FC<IComponent> = () => {
     const [isAloneChecked, setIsAloneChecked] = useState(false);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const { register, handleSubmit, setValue, formState: { errors } } =
         useForm<IComponent>({ resolver: isAloneChecked ? yupResolver(saleAloneSchema) : yupResolver(notSaleAloneSchema) });
-    const save = (data: IComponent) => {
-        if (isAloneChecked) {
-            alert("ניתן למכירה בנפרד");
-        } else {
-            alert("לא ניתן למכירה בנפרד");
-        }
-    }
+        const save = async (data: IComponent) => {
+            try {
+                await addItem<IComponent>('component',data);
+                 dispatch(addComponent(data));
+    
+            } catch (error) {
+                console.error(error);
+            }
+        };
     const handleIsAloneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAloneChecked(event.target.checked);
     };
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
+            setSelectedFiles(Array.from(files));
             setValue('images', Array.from(files));
         }
     };
@@ -131,3 +135,7 @@ export const ComponentForm: React.FC<IComponent> = () => {
         </form>
     );
 }
+
+
+
+
