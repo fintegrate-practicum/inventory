@@ -1,47 +1,37 @@
 import React, { useState } from "react";
 import { useForm } from 'react-hook-form';
+import { useDispatch } from "react-redux";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useDispatch } from 'react-redux';
-import { addComponent } from '../features/component/componentSlice';
+import { IComponent } from '../interfaces/IComponent';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import './ComponentForm.css';
 import { addItem } from '../Api-Requests/genericRequests';
-import { IComponent } from "../interfaces/IComponent";
-
-
-interface IFormInput {
-    id: string;
-    name: string;
-    purchasePrice: number;
-    isAlone: boolean;
-    description?: string;
-    salePrice?: number;
-    images?: File[];
-}
+import { addComponent } from '../features/component/componentSlice';
+import './ComponentForm.css';
 
 const notSaleAloneSchema = yup.object().shape({
     name: yup.string().required("name is a required field").min(3, "name must be at least 3 characters").max(20, "name must be at most 20 characters"),
-    purchasePrice: yup.string().required("purchase price is a required field").matches(/^[0-9]{1,}$/, "price consists of numbers only"),
+    purchasePrice: yup.string().required("purchase price is a required field").matches(/^[0-9]+(\.[0-9]{1,2})?$/, "price must be a number"),
     isAlone: yup.boolean()
 });
 
 const saleAloneSchema = yup.object().shape({
     name: yup.string().required("name is a required field").min(3, "name must be at least 3 characters").max(20, "name must be at most 20 characters"),
-    purchasePrice: yup.string().required("purchase price is a required field").matches(/^[0-9]{1,}$/, "price consists of numbers only"),
+    purchasePrice: yup.string().required("purchase price is a required field").matches(/^[0-9]+(\.[0-9]{1,2})?$/, "price must be a number"),
     isAlone: yup.boolean(),
     description: yup.string().required("description is a required field"),
     salePrice: yup.string()
         .required("sale price is a required field")
-        .matches(/^[0-9]{1,}$/, "price consists of numbers only")
+        .matches(/^[0-9]+(\.[0-9]{1,2})?$/, "price must be a number")
         .test('is-greater-than', 'sale price must be greater than purchase price', function (value) {
             const { purchasePrice } = this.parent;
             const parsedSalePrice = parseFloat(value);
             const parsedPurchasePrice = parseFloat(purchasePrice);
             return parsedSalePrice > parsedPurchasePrice || parsedSalePrice === 0;
         }),
+
     images: yup.array().min(1, "must be at least 1").max(5, "must be at most 5").required('please select an image')
 });
 
@@ -51,17 +41,15 @@ export const ComponentForm: React.FC<IComponent> = () => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const { register, handleSubmit, setValue, formState: { errors } } =
         useForm<IComponent>({ resolver: isAloneChecked ? yupResolver(saleAloneSchema) : yupResolver(notSaleAloneSchema) });
-        const save = async (data: IComponent) => {
-            try {
-                console.log('hiii');
-                
-                await addItem<IComponent>('component',data);
-                 dispatch(addComponent(data));
-    
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    const save = async (data: IComponent) => {
+        try {
+            await addItem<IComponent>('component', data);
+            dispatch(addComponent(data));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const handleIsAloneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsAloneChecked(event.target.checked);
     };
@@ -73,8 +61,6 @@ export const ComponentForm: React.FC<IComponent> = () => {
             setValue('images', Array.from(files));
         }
     };
-
-    
 
     return (
         <form onSubmit={handleSubmit(save)}>
@@ -94,7 +80,6 @@ export const ComponentForm: React.FC<IComponent> = () => {
                     />
                 </Box>
             }
-
             {!errors.purchasePrice ?
                 <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
                     <TextField id="outlined-basic" label="purchase price" variant="outlined" {...register("purchasePrice")} />
@@ -152,7 +137,6 @@ export const ComponentForm: React.FC<IComponent> = () => {
                             />
                         </Box>
                     }
-
                     <label>images</label>
                     <input type="file" multiple onChange={handleImageChange} />
                     {errors.images && <p>{errors.images.message}</p>}
@@ -160,6 +144,11 @@ export const ComponentForm: React.FC<IComponent> = () => {
             )}
 
             <Button variant="outlined" type="submit">save</Button>
+
         </form>
     );
 }
+
+
+
+
