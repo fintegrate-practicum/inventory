@@ -2,6 +2,9 @@ import { Injectable, ForbiddenException, BadRequestException, NotFoundException,
 import { Component } from './component.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import * as Joi from '@hapi/joi';
+import {componentValidationSchema} from "./component.validate"
+
 // /////////////// for example only/////////////////////////
 @Injectable()
 export class ComponentService {
@@ -14,11 +17,19 @@ export class ComponentService {
         if (!this.userHasBusinessManagerPermission(adminId)) {//אמור לשלוף אותו מהטוקן
         throw new ForbiddenException('Insufficient permissions to add a new component.');
       }
+      componentValidationSchema.validate(ComponentData);//בדיקה ע"י סכמה joi
        await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
       let newComponent = this.componentModel.create({...ComponentData,isActive:true});
       return newComponent;
       }
       catch(err){
+        if (err instanceof Joi.ValidationError) {//בדיקה האם השגיאה קשורה לולידציה של הקלט
+          const errors = err.details.map((detail) => ({
+            path: detail.path.join('.'),
+            message: detail.message,
+          }));
+          throw new BadRequestException({ errors } );
+        } 
         console.log(err);
         throw new ConflictException('service component sorry cannot add component');
       }}

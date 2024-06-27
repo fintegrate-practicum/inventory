@@ -2,9 +2,6 @@ import { Controller, Post, Body, Headers,Delete,Put,Get, HttpException, HttpStat
 import { ComponentService } from './component.service';
 import { Component } from './component.entity';
 import { Types } from 'mongoose';
-import * as Joi from '@hapi/joi';
-import {componentValidationSchema} from "./component.validate"
-
 
 @Controller('api/inventory/component')
 export class ComponentController {
@@ -20,19 +17,10 @@ export class ComponentController {
   @Post()
   async addNewComponent(@Headers('x-access-token') token: string, @Body() newComponent: Component) {
     try {
-      componentValidationSchema.validate(newComponent);//בדיקה ע"י סכמה joi
       await this.componentService.addNewComponent(newComponent, token);//שליחה לפונקציה של Service
       return { message: 'component added succesfully' };
     } 
-    catch (err) {
-      if (err instanceof Joi.ValidationError) {//בדיקה האם השגיאה קשורה לולידציה של הקלט
-        const errors = err.details.map((detail) => ({
-          path: detail.path.join('.'),
-          message: detail.message,
-        }));
-        throw new HttpException({ errors }, HttpStatus.BAD_REQUEST);
-      } 
-      else {
+    catch (err) { {
         console.error('Error adding component:', err);
         throw new HttpException('Error adding component', HttpStatus.BAD_REQUEST);
       }
