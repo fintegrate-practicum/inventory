@@ -1,6 +1,7 @@
 import { Controller, Delete, Get, Param, Put, Post, Body, Headers } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
+import { Types } from 'mongoose';
 
 @Controller('api/inventory/product')
 export class ProductController {
@@ -22,8 +23,12 @@ export class ProductController {
     }
 
     @Put(':productId')
-    updateProduct(@Headers('x-access-token') token: string, @Param('productId') productId: string, @Body() updatedFields: any) {
-        return this.ProductsService.updateProduct(productId, updatedFields, token);
+    async updateProduct(
+        @Param('productId') productId: Types.ObjectId,
+        @Body() updatedFields: any,
+    ): Promise<Product> {
+        await this.ProductsService.validateProduct(updatedFields);
+        return await this.ProductsService.updateProduct(productId, updatedFields);
     }
 
     @Post()
