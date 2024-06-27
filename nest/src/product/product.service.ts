@@ -48,6 +48,7 @@ export class ProductService {
   }
 
   async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {
+    await this.validateProduct(updatedFields);
     const product = await this.productModel.findOneAndUpdate(
       { id: productId, isActive: true },
       updatedFields,

@@ -39,8 +39,10 @@ describe('ProductController', () => {
       ...updatedFields,
       id: productId,
     });
-    expect(productService.updateProduct).toHaveBeenCalledWith(productId, updatedFields);
-    expect(productService.validateProduct).toHaveBeenCalledWith(updatedFields);
+
+    const objectId = new Types.ObjectId(productId); // Convert to ObjectId for comparison
+
+    expect(productService.updateProduct).toHaveBeenCalledWith(objectId, updatedFields);
   });
 
   it('/PUT api/inventory/product/:productId should return an error if product update fails', async () => {
@@ -58,11 +60,14 @@ describe('ProductController', () => {
       message: 'Product not found',
       error: 'Not Found',
     });
-    expect(productService.updateProduct).toHaveBeenCalledWith(productId, updatedFields);
-    expect(productService.validateProduct).toHaveBeenCalledWith(updatedFields);
+
+    const objectId = new Types.ObjectId(productId); // Convert to ObjectId for comparison
+
+    expect(productService.updateProduct).toHaveBeenCalledWith(objectId, updatedFields);
   });
 
   afterAll(async () => {
     await app.close();
   });
 });
+
