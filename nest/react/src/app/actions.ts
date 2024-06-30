@@ -22,7 +22,7 @@ export const addItem = <T extends Item>(state: State<T>, action: PayloadAction<T
   };
 };
 
-export const setData = <T extends Item>(state: State<T>, action: PayloadAction<T>) => {
+export const setData = <T extends Item>(state: State<T>, action: PayloadAction<T[]>) => {
   return {
     ...state,
     data: action.payload,

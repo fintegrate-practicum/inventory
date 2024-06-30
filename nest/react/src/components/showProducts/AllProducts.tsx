@@ -22,7 +22,7 @@ export default function ShowProducts() {
   
   const getAllProducts = async () => {
     try {
-      const res = await getAllItems<IProduct>('product');
+      const res = await getAllItems<IProduct[]>('product');
       dispatch(getProducts(res.data));
     }
     catch (err) {
@@ -32,7 +32,7 @@ export default function ShowProducts() {
 
   const getComponents = async () => {
     try {
-      const res = await getAllItems<IComponent>('component');
+      const res = await getAllItems<IComponent[]>('component');
       dispatch(getAllComponents(res.data));
     }
     catch (err) {
