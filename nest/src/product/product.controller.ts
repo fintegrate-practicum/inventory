@@ -1,6 +1,7 @@
-import { Controller, Delete, Get, Param, Put, Post, Body, Headers, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Put, Post, Body, Headers, HttpException,BadRequestException, HttpStatus } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
+import { Types } from 'mongoose';
 
 @Controller('api/inventory/product')
 export class ProductController {
@@ -22,8 +23,12 @@ export class ProductController {
     }
 
     @Put(':productId')
-    updateProduct(@Headers('x-access-token') token: string, @Param('productId') productId: string, @Body() updatedFields: any) {
-        return this.productsService.updateProduct(productId, updatedFields, token);
+    async updateProduct(
+        @Param('productId') productId: string,
+        @Body() updatedFields: any,
+    ): Promise<Product> {
+        const objectId = this.convertToObjectId(productId);
+        return this.ProductsService.updateProduct(objectId, updatedFields);
     }
 
     @Post()
@@ -43,5 +48,10 @@ export class ProductController {
         return { message: 'Product soft deleted successfully' };
     }
 
+    private convertToObjectId(id: string): Types.ObjectId {
+        if (!Types.ObjectId.isValid(id)) {
+            throw new BadRequestException('Invalid ObjectId format');
+        }
+        return new Types.ObjectId(id);
+    }
 }
-

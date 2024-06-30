@@ -1,12 +1,12 @@
-// import { useState } from 'react';
-// import reactLogo from './assets/react.svg';
-// import viteLogo from '/vite.svg';
 import './App.css';
-// import DeleteProduct from './components/DeleteProduct';
+// import AddProductForm from './components/AddProductForm';
+import { ComponentForm } from './components/ComponentForm';
 
 function App() {
   return (
     <>
+      <ComponentForm />
+      {/* <AddProductForm /> */}
     </>
   );
 }

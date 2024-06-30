@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ForbiddenException, BadRequestException,
 import { Product } from './product.entity';
 import { productValidationSchema } from '../entities/Product.validate';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 /////for example only////////
 @Injectable()
 export class ProductService {
@@ -67,18 +67,25 @@ export class ProductService {
     }
   }
 
-  async updateProduct(ProductId: string, updatedFields: any, adminId: string): Promise<Product> {
-    const product = await this.productModel.findOne({ id: ProductId, isActive: true });
+  async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {
+    await this.validateProduct(updatedFields);
+    const product = await this.productModel.findOneAndUpdate(
+      { id: productId, isActive: true },
+      updatedFields,
+      { new: true }
+    );
+    if (!product) {
+      throw new NotFoundException('Component not found.');
+    }
+    console.log("The product is updated");
+    return product;
+  }
 
-    if (!product)
-      throw new NotFoundException('Product not found.');
-
-    if (product.adminId !== adminId)
-      throw new ForbiddenException('You are not authorized to update this product.');
-
-    Object.assign(product, updatedFields);
-    const updatedProduct = await this.productModel.create(product);
-    return updatedProduct;
+  async validateProduct(updatedFields: any): Promise<void> {
+    const { error } = await productValidationSchema.validateAsync(updatedFields);
+    if (error) {
+      throw new BadRequestException('Component data is invalid.', error.details.map(err => err.message));
+    }
   }
 
   async updateProductDiscount(newSalePercentage: number, adminId: string): Promise<void> {
