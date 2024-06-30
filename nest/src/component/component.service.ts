@@ -2,7 +2,9 @@ import { Injectable, ForbiddenException, BadRequestException, NotFoundException,
 import { Component } from './component.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-// /////////////// for example only/////////////////////////
+import { componentValidationSchema } from 'src/entities/Component.validate';
+
+
 @Injectable()
 export class ComponentService {
 
@@ -37,27 +39,28 @@ export class ComponentService {
     return component;
   }
 
-  async updateComponent(componentId: Types.ObjectId, updatedFields: any, adminId: string): Promise<Component> {
-
-    const component = await this.componentModel.findOne({ id: componentId, isActive: true });
+  async updateComponent(componentId: Types.ObjectId, updatedFields: any): Promise<Component> {
+    await this.validateComponent(updatedFields)
+    const component = await this.componentModel.findOneAndUpdate(
+      { id: componentId, isActive: true },
+      updatedFields,
+      { new: true }
+    );
 
     if (!component) {
-      throw new NotFoundException('component not found.');
-    }
-    if (!component.isActive) {
-      throw new NotFoundException('component is deleted.');
+      throw new NotFoundException('Component not found.');
     }
 
-    if (component.adminId !== adminId) {
-      throw new ForbiddenException('You are not authorized to update this component.');
-    }
-    //משנה את השדות שכבר קיימים לפי הערכים החדשים ושדות שלא קיימים - מוסיף אותם
-    //אין אבטחה לגבי השדות החדשים שמוסיף
-    Object.assign(component, updatedFields);
-
-    const updatedComponent = await this.componentModel.create(component);
-    return updatedComponent;
+    return component;
   }
+
+  async validateComponent(updatedFields: any): Promise<void> {
+    const { error } = await componentValidationSchema.validateAsync(updatedFields);
+    if (error) {
+      throw new BadRequestException('Component data is invalid.', error.details.map(err => err.message));
+    }
+  }
+
 
   async softDeleteComponent(componentId: Types.ObjectId, adminId: string): Promise<void> {
     const component = await this.componentModel.findOne({ id: componentId });

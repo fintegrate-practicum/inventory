@@ -1,36 +1,73 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductController } from './Product.controller';
-import { Product, ProductSchema } from './Product.entity';
-import { Model } from 'mongoose';
-import { getModelToken } from '@nestjs/mongoose';
-import { ProductService } from './Product.service';
+import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
+import { ProductController } from './product.controller';
+import { ProductService } from './product.service';
+import { Types } from 'mongoose';
+import { NotFoundException } from '@nestjs/common';
 
 describe('ProductController', () => {
-  let controller: ProductController;
-  let ProductModel: Model<Product>;
+  let app: INestApplication;
+  let productService = {
+    updateProduct: jest.fn().mockImplementation((id, update) => ({
+      ...update,
+      id,
+    })),
+    validateProduct: jest.fn().mockResolvedValue(true),
+  };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+  beforeAll(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
       controllers: [ProductController],
-      providers: [
-        ProductService,
-        {
-          provide: getModelToken(Product.name), 
-          useFactory: () => {
-            const mongoose = require('mongoose'); 
-            return mongoose.model(Product.name, ProductSchema); 
-          },
-        },
-      ],
+      providers: [{ provide: ProductService, useValue: productService }],
     }).compile();
 
-    controller = module.get<ProductController>(ProductController);
-    ProductModel = module.get<Model<Product>>(getModelToken(Product.name)); 
+    app = moduleRef.createNestApplication();
+    await app.init();
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('/PUT api/inventory/product/:productId should update the product successfully', async () => {
+    const productId = new Types.ObjectId().toString();
+    const updatedFields = { name: 'Updated Product', price: 100 };
+
+    const response = await request(app.getHttpServer())
+      .put(`/api/inventory/product/${productId}`)
+      .send(updatedFields)
+      .expect(200);
+
+    expect(response.body).toEqual({
+      ...updatedFields,
+      id: productId,
+    });
+
+    const objectId = new Types.ObjectId(productId); // Convert to ObjectId for comparison
+
+    expect(productService.updateProduct).toHaveBeenCalledWith(objectId, updatedFields);
   });
 
+  it('/PUT api/inventory/product/:productId should return an error if product update fails', async () => {
+    const productId = new Types.ObjectId().toString();
+    const updatedFields = { name: 'Updated Product', price: 100 };
+    productService.updateProduct.mockRejectedValueOnce(new NotFoundException('Product not found'));
+
+    const response = await request(app.getHttpServer())
+      .put(`/api/inventory/product/${productId}`)
+      .send(updatedFields)
+      .expect(404);
+
+    expect(response.body).toEqual({
+      statusCode: 404,
+      message: 'Product not found',
+      error: 'Not Found',
+    });
+
+    const objectId = new Types.ObjectId(productId); // Convert to ObjectId for comparison
+
+    expect(productService.updateProduct).toHaveBeenCalledWith(objectId, updatedFields);
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
 });
 
