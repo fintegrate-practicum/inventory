@@ -10,10 +10,10 @@ import { IProduct } from '../../interfaces/IProduct'
 import { IComponent } from '../../interfaces/IComponent';
 
 const SingleProduct: React.FC<{ product: IProduct | IComponent }> = ({ product }) => {
-  const ques = "totalPrice" in product;
-  const description = ques ? product.productDescription : product.componentDescription;
-  const price = ques ? product.totalPrice : product.salePrice;
-  const images = ques ? product.componentsImages : product.componentImages;
+  const isProduct = "totalPrice" in product;
+  const description = isProduct ? product.productDescription : product.componentDescription;
+  const price = isProduct ? product.totalPrice : product.salePrice;
+  const images = isProduct ? product.componentsImages : product.componentImages;
 
   return (
     <Card sx={{ width: 200, maxWidth: '100%', boxShadow: 'lg', margin: 2 }}>
