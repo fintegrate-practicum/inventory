@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from '@nestjs/common';
 import { Product } from './product.entity';
 import { productValidationSchema } from '../entities/Product.validate';
 import { InjectModel } from '@nestjs/mongoose';
@@ -38,13 +38,33 @@ export class ProductService {
     await this.productModel.create(product);
   }
 
-  async addNewProduct(productData: Product, adminId: string): Promise<Product> {
-    productValidationSchema.validate(productData);
-    if (!this.userHasBusinessManagerPermission(adminId)) {
+
+
+  async addNewProduct(productData: any, adminId: string): Promise<any> {
+
+    if (!this.userHasBusinessManagerPermission(adminId))
       throw new ForbiddenException('Insufficient permissions to add a new product.');
+
+    try {
+      await this.validateProduct(productData)
+      let sameName = await this.productModel.findOne({ productName: productData.productName, isActive: true })
+      if (sameName)
+        throw new ConflictException('a product with the same name already exists');
+      const newProduct = await this.productModel.create(productData);
+      return newProduct;
+
     }
-    const savedProduct = await this.productModel.create(productData);
-    return savedProduct;
+    catch (err) {
+      console.log(err);
+    }
+  
+  }
+
+  async validateProduct(newProduct: any): Promise<void> {
+    const { error } = await productValidationSchema.validateAsync(newProduct);
+    if (error) {
+      throw new BadRequestException('Product data is invalid.', error.details.map(err => err.message));
+    }
   }
 
   async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {
