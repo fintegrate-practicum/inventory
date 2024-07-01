@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Headers,Delete,Put,Get, HttpException, HttpStatus, ValidationPipe,Param } from '@nestjs/common';
+import { Controller, Post, Body, Headers,Delete,Put,Get, HttpException, HttpStatus, ValidationPipe,Param, BadRequestException } from '@nestjs/common';
 import { ComponentService } from './component.service';
 import { Component } from './component.entity';
 import { Types } from 'mongoose';
@@ -28,8 +28,12 @@ export class ComponentController {
   }
   
   @Put(':componentId')
-  updateComponent(@Headers('x-access-token') token: string, @Param('componentId') componentId: Types.ObjectId, updatedFields: any) {
-    return this.componentService.updateComponent(componentId, updatedFields, token);
+  async updateComponent(
+    @Param('componentId') componentId: string,
+    @Body() updatedFields: any,
+  ): Promise<Component> {
+    const objectId = this.convertToObjectId(componentId);
+    return await this.componentService.updateComponent(objectId, updatedFields);
   }
 
   @Get()
@@ -39,6 +43,13 @@ export class ComponentController {
   @Get(':componentId')
   getComponentById(@Param('componentId') componentId: string) {
     return this.componentService.getComponentById(componentId);
+  }
+
+  private convertToObjectId(id: string): Types.ObjectId {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid ObjectId format');
+    }
+    return new Types.ObjectId(id);
   }
 
 }

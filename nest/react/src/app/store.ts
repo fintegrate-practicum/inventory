@@ -8,5 +8,6 @@ export const store = configureStore({
         product: productSlice,
         component: componentSlice,
         provider: providerSlice
-    }
+    }   
 });
+export type RootState = ReturnType<typeof store.getState>;

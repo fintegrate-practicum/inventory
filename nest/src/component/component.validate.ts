@@ -52,5 +52,5 @@ export const componentValidationSchema :Joi.ObjectSchema= Joi.object({
   }),
   componentColor: Joi.string().optional(),
   componentSize: Joi.string().optional(),
-  bussinesId: Joi.string().required()
+  businessId: Joi.string().required()
 });
