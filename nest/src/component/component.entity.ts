@@ -18,7 +18,7 @@ export class Component extends Document {
     @Min(1, { message: "Price must be more than 1" })
     componentBuyPrice: number;
 
-    @Prop({ required: false })
+    @Prop({ required: true })
     addingComponentDate: Date = new Date();
 
     @Prop({ required: true })

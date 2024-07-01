@@ -15,7 +15,7 @@ export class ComponentService {
         if (!this.userHasBusinessManagerPermission(adminId)) {//אמור לשלוף אותו מהטוקן
         throw new ForbiddenException('Insufficient permissions to add a new component.');
       }
-      await componentValidationSchema.validateAsync(ComponentData);
+      await this.validateComponent(ComponentData);
        await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
       let newComponent = this.componentModel.create({...ComponentData,isActive:true});
       return newComponent;

@@ -11,7 +11,7 @@ export const componentValidationSchema :Joi.ObjectSchema= Joi.object({
     'number.min': "price must be more than 1",
     'any.required': "componentBuyPrice is required"
   }),
-  addingComponentDate: Joi.date(),
+  addingComponentDate: Joi.date().required(),
   minQuantity: Joi.number().min(1).required().messages({
     'number.min': "min quantity must be positive",
     'any.required': "minQuantity is required"
