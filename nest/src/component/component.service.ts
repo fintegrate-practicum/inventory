@@ -11,42 +11,22 @@ export class ComponentService {
 
   constructor(@InjectModel(Component.name) private readonly componentModel: Model<Component>) { }
 
-  
     async addNewComponent(ComponentData:any,adminId:string): Promise<any> {
-      try{ 
         if (!this.userHasBusinessManagerPermission(adminId)) {//אמור לשלוף אותו מהטוקן
         throw new ForbiddenException('Insufficient permissions to add a new component.');
       }
-      componentValidationSchema.validate(ComponentData);//בדיקה ע"י סכמה joi
+       await this.validateComponent(ComponentData)
        await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
       let newComponent = this.componentModel.create({...ComponentData,isActive:true});
       return newComponent;
-      }
-      catch(err){
-        if (err instanceof Joi.ValidationError) {//בדיקה האם השגיאה קשורה לולידציה של הקלט
-          const errors = err.details.map((detail) => ({
-            path: detail.path.join('.'),
-            message: detail.message,
-          }));
-          throw new BadRequestException({ errors } );
-        } 
-        console.log(err);
-        throw new ConflictException('service component sorry cannot add component');
-      }}
+     
+    }
       //פונקציה לולידציות על הקלט
       private async validateParams(newComponent:Component) {
-        try{
-          let sameComponent=await this.componentModel.findOne({componentName:newComponent.componentName,isActive:true})
+      let sameComponent=await this.componentModel.findOne({componentName:newComponent.componentName,isActive:true})
       if(sameComponent)
         throw new ConflictException('there is already same component');
-         
-        }
-        catch(err){ 
-          console.log(err);
-          throw new ConflictException('validateParams-sorry Something went wrong cannot add component');
-      
-          }  
-        }
+      }
 
   async getAllComponents(): Promise<Component[]> {
     // adminId-token
@@ -78,8 +58,8 @@ export class ComponentService {
     return component;
   }
 
-  async validateComponent(updatedFields: any): Promise<void> {
-    const { error } = await componentValidationSchema.validateAsync(updatedFields);
+  async validateComponent(componentData: any): Promise<void> {
+    const { error } = await componentValidationSchema.validateAsync(componentData);
     if (error) {
       throw new BadRequestException('Component data is invalid.', error.details.map(err => err.message));
     }

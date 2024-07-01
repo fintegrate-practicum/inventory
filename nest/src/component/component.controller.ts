@@ -22,7 +22,7 @@ export class ComponentController {
     } 
     catch (err) { {
         console.error('Error adding component:', err);
-        throw new HttpException('Error adding component', HttpStatus.BAD_REQUEST);
+        throw new HttpException('Error adding component'+err, HttpStatus.BAD_REQUEST);
       }
     }
   }

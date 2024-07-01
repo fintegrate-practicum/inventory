@@ -60,13 +60,6 @@ export class ProductService {
   
   }
 
-  async validateProduct(newProduct: any): Promise<void> {
-    const { error } = await productValidationSchema.validateAsync(newProduct);
-    if (error) {
-      throw new BadRequestException('Product data is invalid.', error.details.map(err => err.message));
-    }
-  }
-
   async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {
     await this.validateProduct(updatedFields);
     const product = await this.productModel.findOneAndUpdate(
