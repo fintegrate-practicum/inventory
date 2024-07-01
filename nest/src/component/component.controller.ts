@@ -16,15 +16,8 @@ export class ComponentController {
 
   @Post()
   async addNewComponent(@Headers('x-access-token') token: string, @Body() newComponent: Component) {
-    try {
       await this.componentService.addNewComponent(newComponent, token);//שליחה לפונקציה של Service
       return { message: 'component added succesfully' };
-    } 
-    catch (err) { {
-        console.error('Error adding component:', err);
-        throw new HttpException('Error adding component'+err, HttpStatus.BAD_REQUEST);
-      }
-    }
   }
   
   @Put(':componentId')
