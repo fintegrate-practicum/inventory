@@ -12,10 +12,10 @@ const productSlice = createSlice({
     reducers: {
         deleteProduct: deleteItem,
         addProduct: addItem,
-        getProductsAdmin: setData,
+        getProducts: setData,
         updateProduct: updateItem,
     }
 });
 
-export const { deleteProduct, addProduct, getProductsAdmin, updateProduct } = productSlice.actions;
+export const { deleteProduct, addProduct, getProducts, updateProduct } = productSlice.actions;
 export default productSlice.reducer;
