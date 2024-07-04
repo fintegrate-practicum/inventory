@@ -15,9 +15,7 @@ export const deleteItem = <T extends Item>(state: State<T>, action: PayloadActio
   };
 };
 
-export const addItem = <T extends Item>(state: State<T>, action: PayloadAction<T>) => {  
-  // console.log('chayaaaaaaaaa');
-  
+export const addItem = <T extends Item>(state: State<T>, action: PayloadAction<T>) => {
   return {
     ...state,
     data: [...state.data, action.payload],

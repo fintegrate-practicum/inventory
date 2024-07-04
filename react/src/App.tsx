@@ -1,12 +1,9 @@
 import './App.css';
-// import AddProductForm from './components/AddProductForm';
-import { ComponentForm } from './components/ComponentForm';
-
+import ShowProducts from './components/showProducts/AllProducts';
 function App() {
   return (
     <>
-      <ComponentForm />
-      {/* <AddProductForm /> */}
+    <ShowProducts/>
     </>
   );
 }

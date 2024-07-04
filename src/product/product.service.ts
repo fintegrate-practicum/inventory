@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from '@nestjs/common';
 import { Product } from './product.entity';
-import { productValidationSchema } from '../entities/Product.validate';
+import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 /////for example only////////
@@ -58,13 +58,6 @@ export class ProductService {
       console.log(err);
     }
   
-  }
-
-  async validateProduct(newProduct: any): Promise<void> {
-    const { error } = await productValidationSchema.validateAsync(newProduct);
-    if (error) {
-      throw new BadRequestException('Product data is invalid.', error.details.map(err => err.message));
-    }
   }
 
   async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {

@@ -28,7 +28,7 @@ export class ProductController {
         @Body() updatedFields: any,
     ): Promise<Product> {
         const objectId = this.convertToObjectId(productId);
-        return this.ProductsService.updateProduct(objectId, updatedFields);
+        return this.productsService.updateProduct(objectId, updatedFields);
     }
 
     @Post()

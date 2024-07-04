@@ -1,4 +1,4 @@
-import httpSrvice from "./httpSrvice";
+import httpSrvice from "./httpService";
 
 export const getItemById = <T>(route: string, id: string) => {
     return httpSrvice.get<T>(`/${route}/${id}`);
