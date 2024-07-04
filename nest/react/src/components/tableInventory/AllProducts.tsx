@@ -5,11 +5,13 @@ import { IProduct } from '../../interfaces/IProduct';
 import { IComponent } from '../../interfaces/IComponent';
 
 const AllProducts: React.FunctionComponent<{ productsArr: IProduct[], componentsArr: IComponent[] }> = ({ productsArr, componentsArr }) => {
-  const componentMap: { [key: string]: string } = useMemo(() => componentsArr.reduce((acc, item) => ({ ...acc, [item.id]: item.componentName }), {}), [componentsArr]);
+  const componentMap: { [key: string]: string } = useMemo(() => componentsArr.reduce((acc, item) => ({ ...acc, [item.id]: item.name }), {}), [componentsArr]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const allRows: (IProduct | IComponent)[] = [...productsArr, ...componentsArr];
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'productName', headerName: 'Name', width: 130 },
+    { field: 'name', headerName: 'Name', width: 130 },
     { field: 'totalPrice', headerName: 'Price', type: 'number', width: 90 },
     {
       field: 'stockQuantity',
@@ -52,7 +54,7 @@ const AllProducts: React.FunctionComponent<{ productsArr: IProduct[], components
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={productsArr}
+         rows={allRows}
         columns={columns}
         onRowSelectionModelChange={handleRowSelectionChange}//(בודק אם שורה נבחרה (בשביל הוספת מוצר
         initialState={{
