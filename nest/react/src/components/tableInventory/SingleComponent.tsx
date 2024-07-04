@@ -13,17 +13,17 @@ import { IComponent } from '../../interfaces/IComponent';
       <CardMedia
         sx={{ height: 140 }}
         image={component.componentImages[0]}
-        title={component.componentName}
+        title={component.name}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {component.componentName}
+          {component.name}
         </Typography>
         <Typography gutterBottom variant="body1" component="div">
          price: { component.componentBuyPrice}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {component.componentDescription}
+          {component.description}
         </Typography>
       </CardContent>
       <CardActions>

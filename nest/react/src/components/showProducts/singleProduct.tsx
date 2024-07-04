@@ -10,9 +10,9 @@ import { IProduct } from '../../interfaces/IProduct'
 import { IComponent } from '../../interfaces/IComponent';
 
 const SingleProduct: React.FC<{ product: IProduct | IComponent }> = ({ product }) => {
-  const isProduct = "totalPrice" in product;
-  const description = isProduct ? product.productDescription : product.componentDescription;
-  const price = isProduct ? product.totalPrice : product.salePrice;
+  const isProduct = "productComponents" in product;
+  const description = product.description ;
+  const price = product.totalPrice;
   const images = isProduct ? product.componentsImages : product.componentImages;
 
   return (

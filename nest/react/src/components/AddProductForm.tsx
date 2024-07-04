@@ -12,8 +12,8 @@ import Box from '@mui/material/Box';
 
 const AddProductForm=()=>{
   const productSchema = yup.object().shape({
-    productName: yup.string().required("productName is a required field").min(3, "productName must be at least 3 characters").max(20, "productName must be at most 20 characters"),
-    productDescription: yup.string().required("productDescription is a required field"),
+    name: yup.string().required("productName is a required field").min(3, "productName must be at least 3 characters").max(20, "productName must be at most 20 characters"),
+    description: yup.string().required("productDescription is a required field"),
     totalPrice: yup.string().required("purchase price is a required field").matches(/^[0-9]+(\.[0-9]{1,2})?$/, "price must be a number"),
     componentsImages: yup.array().min(1, "must be at least 1").max(5, "must be at most 5").required('please select an image')
 });
@@ -25,8 +25,8 @@ const AddProductForm=()=>{
       if (selectedImages) {
           try {
               const formData = new FormData();
-              formData.append('Name', data.productName);
-              formData.append('Description', data.productDescription);
+              formData.append('Name', data.name);
+              formData.append('Description', data.description);
               formData.append('Price', data.totalPrice.toString());
               Array.from(selectedImages).forEach((image) => {
                   formData.append('componentsImages', image);
@@ -58,9 +58,9 @@ const AddProductForm=()=>{
 };
     return (
          <form onSubmit={handleSubmit(onSubmit)}>
-             {!errors.productName?
+             {!errors.name?
                 <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
-                    <TextField id="outlined-basic" label="productName" variant="outlined" {...register("productName")} />
+                    <TextField id="outlined-basic" label="name" variant="outlined" {...register("name")} />
                 </Box>
                 :
                 <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
@@ -69,15 +69,15 @@ const AddProductForm=()=>{
                         id="outlined-error-helper-text"
                         label="name"
                         defaultValue="name"
-                        helperText={errors.productName.message}
-                        {...register("productName")}
+                        helperText={errors.name.message}
+                        {...register("name")}
                     />
                 </Box>
             }
 
-           {!errors.productDescription ?
+           {!errors.description ?
                 <Box className='itemInput' sx={{ '& > :not(style)': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
-                    <TextField id="outlined-basic" label="description" variant="outlined" {...register("productDescription")} />
+                    <TextField id="outlined-basic" label="description" variant="outlined" {...register("description")} />
                 </Box>
                 :
                 <Box className='itemInput' sx={{ '& .MuiTextField-root': { m: 1, width: '18ch' }, }} noValidate autoComplete="off">
@@ -86,8 +86,8 @@ const AddProductForm=()=>{
                         id="outlined-error-helper-text"
                         label="description"
                         defaultValue="description"
-                        helperText={errors.productDescription.message}
-                        {...register("productDescription")}
+                        helperText={errors.description.message}
+                        {...register("description")}
                     />
                 </Box>
             }
