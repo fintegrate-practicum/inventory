@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 
 const connectDB = async () => {
   try {
-    const configService = new ConfigService();
     await mongoose.connect(process.env.MONGODB_URI, {
       dbName: process.env.DM_NAME,
     });
