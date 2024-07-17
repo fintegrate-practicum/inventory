@@ -1,4 +1,3 @@
-
 {
   "arrowParens": "always",
   "bracketSameLine": false,
@@ -16,8 +15,6 @@
   "insertPragma": false,
   "printWidth": 90,
   "requirePragma": false,
-  "tabWidth": 3,
-  "useTabs": true,
   "embeddedLanguageFormatting": "auto",
   "cursorOffset": -1
 }
