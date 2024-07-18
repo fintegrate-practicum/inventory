@@ -10,7 +10,6 @@ import { ProviderModule } from './provider/provider.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
-    // MongooseModule.forRoot(process.env.MONGO_URI),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
