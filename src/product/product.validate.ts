@@ -9,7 +9,7 @@ export const productValidationSchema:Joi.ObjectSchema = Joi.object({
     'number.min': "package cost must be positive",
     'any.required': "packageCost is required"
   }),
-  productComponents: Joi.array().items(Joi.any()).required(),
+  productComponents: Joi.array().items(Joi.string()).required(),
   totalPrice: Joi.number().min(1).required().messages({
     'number.min': "price must be positive",
     'any.required': "totalPrice is required"

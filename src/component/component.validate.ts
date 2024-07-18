@@ -1,6 +1,6 @@
 import * as Joi from '@hapi/joi';
 
-export const componentValidationSchema :Joi.ObjectSchema= Joi.object({
+export const componentValidationSchema: Joi.ObjectSchema = Joi.object({
   id: Joi.string().optional(),
   componentName: Joi.string().min(3).max(20).required().messages({
     'string.min': "name must be between 3 and 20 letters",
@@ -50,7 +50,7 @@ export const componentValidationSchema :Joi.ObjectSchema= Joi.object({
     }),
     otherwise: Joi.number().optional()
   }),
-  componentColor: Joi.string().optional(),
-  componentSize: Joi.string().optional(),
+  componentColor: Joi.string().optional().allow(null, ''),
+  componentSize: Joi.string().optional().allow(null, ''),
   businessId: Joi.string().required()
 });

@@ -46,11 +46,12 @@ export class Product extends Document {
     isOnSale: boolean = false;
 
     @Prop({ requiredIf: (product: Product) => product.isOnSale })
+    @ValidateIf((entity) => entity.isOnSale)
     @IsNotEmpty()
     @Min(0, { message: "Percentage must be positive" })
     salePercentage: number = 0;
 
-    @Prop({ requiredIf: (product: Product) => product.isOnSale })
+    @Prop({required: false })
     @IsNotEmpty()
     @Min(0, { message: "Stock quantity must be positive" })
     stockQuantity: number;

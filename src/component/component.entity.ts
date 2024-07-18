@@ -1,4 +1,4 @@
-import { Length, Min, IsNotEmpty, ValidateIf } from 'class-validator';
+import { Length, Min, IsNotEmpty, ValidateIf, IsEmpty } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes, Types } from 'mongoose';
 
@@ -40,36 +40,38 @@ export class Component extends Document {
     @Prop({ required: true })
     isSoldSeparately: boolean = false;
 
-    @Prop({ required: true })
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
     componentDescription: string;
 
-    @Prop({ required: true })
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
     salePrice: number;
 
-    @Prop({ required: true })
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
     componentImages: string[];
 
-    @Prop({ required: true })
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
     isInSale: boolean = false;
 
-    @Prop({ required: true })
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
     @Min(0, { message: "Percentage must be positive" })
     salePercentage: number = 0;
-
-    @Prop()
+   
+    @Length(0)
+    @Prop({ required: false })
     componentColor: string;
 
-    @Prop()
+    @Length(0)
+    @Prop({ required: false })
     componentSize: string;
 
     @Prop({ required: true })

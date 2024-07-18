@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Headers,Delete,Put,Get, HttpException, HttpStatus, ValidationPipe,Param, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, Headers, Delete, Put, Get, HttpException, HttpStatus, ValidationPipe, Param, BadRequestException } from '@nestjs/common';
 import { ComponentService } from './component.service';
 import { Component } from './component.entity';
 import { Types } from 'mongoose';
@@ -16,10 +16,10 @@ export class ComponentController {
 
   @Post()
   async addNewComponent(@Headers('x-access-token') token: string, @Body() newComponent: Component) {
-      await this.componentService.addNewComponent(newComponent, token);//שליחה לפונקציה של Service
-      return { message: 'component added succesfully' };
+    await this.componentService.addNewComponent(newComponent, token);//שליחה לפונקציה של Service
+    return { message: 'component added succesfully' };
   }
-  
+
   @Put(':componentId')
   async updateComponent(
     @Param('componentId') componentId: string,

@@ -3,11 +3,11 @@ import { Product } from './product.entity';
 import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { log } from 'console';
 /////for example only////////
 @Injectable()
 export class ProductService {
   constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
-
   async getAllProducts(): Promise<Product[]> {
     const products = await this.productModel.find({ isActive: true });
     return products;
@@ -28,23 +28,17 @@ export class ProductService {
 
   async softDeleteProduct(productId: string): Promise<void> {
     const product = await this.productModel.findOne({ where: { id: productId } });
-
     if (!product) {
+      console.log('Product not found.');
       throw new NotFoundException('Product not found.');
     }
-
     product.isActive = false;
-
     await this.productModel.create(product);
   }
 
-
-
-  async addNewProduct(productData: any, adminId: string): Promise<any> {
-
+  async addNewProduct(productData: Product, adminId: string): Promise<any> {
     if (!this.userHasBusinessManagerPermission(adminId))
       throw new ForbiddenException('Insufficient permissions to add a new product.');
-
     try {
       await this.validateProduct(productData)
       let sameName = await this.productModel.findOne({ productName: productData.productName, isActive: true })
@@ -57,7 +51,7 @@ export class ProductService {
     catch (err) {
       console.log(err);
     }
-  
+
   }
 
   async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {
@@ -76,6 +70,8 @@ export class ProductService {
 
   async validateProduct(updatedFields: any): Promise<void> {
     const { error } = await productValidationSchema.validateAsync(updatedFields);
+    console.log("addProduct from service");
+
     if (error) {
       throw new BadRequestException('Component data is invalid.', error.details.map(err => err.message));
     }
