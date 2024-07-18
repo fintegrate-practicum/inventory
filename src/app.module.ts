@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ComponentModule } from './component/component.module';
@@ -24,14 +24,4 @@ import { ProviderModule } from './provider/provider.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements OnModuleInit {
-  async onModuleInit() {
-    try {
-      // הודעה כאשר התחברות למסד הנתונים מוצלחת
-      console.log('Connected 1  to MongoDB successfully!');
-    } catch (error) {
-      // הודעת שגיאה אם יש בעיה בהתחברות למסד הנתונים
-      console.error('Failed 1  to connect to MongoDB:', error);
-    }
-  }
-}
+export class AppModule {}
