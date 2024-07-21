@@ -3,7 +3,7 @@ import { Component } from './component.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import * as Joi from '@hapi/joi';
-import {componentValidationSchema} from "./component.validate"
+import { componentValidationSchema } from "./component.validate"
 
 // /////////////// for example only/////////////////////////
 @Injectable()
@@ -11,22 +11,22 @@ export class ComponentService {
 
   constructor(@InjectModel(Component.name) private readonly componentModel: Model<Component>) { }
 
-    async addNewComponent(ComponentData:any,adminId:string): Promise<any> {
-        if (!this.userHasBusinessManagerPermission(adminId)) {//אמור לשלוף אותו מהטוקן
-        throw new ForbiddenException('Insufficient permissions to add a new component.');
-      }
-      await this.validateComponent(ComponentData);
-       await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
-      let newComponent = this.componentModel.create({...ComponentData,isActive:true});
-      return newComponent;
-     
+  async addNewComponent(ComponentData: any, adminId: string): Promise<any> {
+    if (!this.userHasBusinessManagerPermission(adminId)) {//אמור לשלוף אותו מהטוקן
+      throw new ForbiddenException('Insufficient permissions to add a new component.');
     }
-      //פונקציה לולידציות על הקלט
-      private async validateParams(newComponent:Component) {
-      let sameComponent=await this.componentModel.findOne({componentName:newComponent.componentName,isActive:true})
-      if(sameComponent)
-        throw new ConflictException('there is already same component');
-      }
+    await this.validateComponent(ComponentData);
+    await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
+    const newComponent = await this.componentModel.create(ComponentData);
+    return newComponent;
+  }
+
+  //פונקציה לולידציות על הקלט
+  private async validateParams(newComponent: Component) {
+    let sameComponent = await this.componentModel.findOne({ name: newComponent.name, isActive: true })
+    if (sameComponent)
+      throw new ConflictException('there is already same component');
+  }
 
   async getAllComponents(): Promise<Component[]> {
     // adminId-token

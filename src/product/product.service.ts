@@ -3,11 +3,11 @@ import { Product } from './product.entity';
 import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+
 /////for example only////////
 @Injectable()
 export class ProductService {
   constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
-
   async getAllProducts(): Promise<Product[]> {
     const products = await this.productModel.find({ isActive: true });
     return products;
@@ -28,26 +28,19 @@ export class ProductService {
 
   async softDeleteProduct(productId: string): Promise<void> {
     const product = await this.productModel.findOne({ where: { id: productId } });
-
     if (!product) {
       throw new NotFoundException('Product not found.');
     }
-
     product.isActive = false;
-
     await this.productModel.create(product);
   }
 
-
-
-  async addNewProduct(productData: any, adminId: string): Promise<any> {
-
+  async addNewProduct(productData: Product, adminId: string): Promise<any> {
     if (!this.userHasBusinessManagerPermission(adminId))
       throw new ForbiddenException('Insufficient permissions to add a new product.');
-
     try {
       await this.validateProduct(productData)
-      let sameName = await this.productModel.findOne({ productName: productData.productName, isActive: true })
+      let sameName = await this.productModel.findOne({ name: productData.name, isActive: true })
       if (sameName)
         throw new ConflictException('a product with the same name already exists');
       const newProduct = await this.productModel.create(productData);
@@ -57,7 +50,7 @@ export class ProductService {
     catch (err) {
       console.log(err);
     }
-  
+
   }
 
   async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {

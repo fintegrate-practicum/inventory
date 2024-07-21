@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Put, Post, Body, Headers, HttpException,BadRequestException, HttpStatus } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Put, Post, Body, Headers, HttpException, BadRequestException, HttpStatus } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { Types } from 'mongoose';
@@ -34,10 +34,10 @@ export class ProductController {
     @Post()
     async addNewProduct(@Headers('x-access-token') token: string, @Body() newProduct: Product) {
         try {
-            await this.productsService.addNewProduct(newProduct, token);  
+            await this.productsService.addNewProduct(newProduct, token);
             return { message: 'Product added successfully' };
         }
-        catch(err) {
+        catch (err) {
             console.log(err);
         }
     }
@@ -47,6 +47,7 @@ export class ProductController {
         await this.productsService.softDeleteProduct(productId);
         return { message: 'Product soft deleted successfully' };
     }
+
 
     private convertToObjectId(id: string): Types.ObjectId {
         if (!Types.ObjectId.isValid(id)) {

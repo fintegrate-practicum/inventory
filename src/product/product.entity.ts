@@ -11,15 +11,15 @@ export class Product extends Document {
     @Prop({ required: true, unique: true })
     @IsNotEmpty()
     @Length(3, 20, { message: "Product name must be between 3 and 20 letters" })
-    productName: string;
+    name: string;
 
     @Prop({ required: true })
     @IsNotEmpty()
-    productDescription: string;
+    description: string;
 
     @Prop({ required: true })
     @IsNotEmpty()
-    componentsImages: string[];
+    images: string[];
 
     @Prop({ required: true })
     @IsNotEmpty()
@@ -46,18 +46,19 @@ export class Product extends Document {
     isOnSale: boolean = false;
 
     @Prop({ requiredIf: (product: Product) => product.isOnSale })
+    @ValidateIf((entity) => entity.isOnSale)
     @IsNotEmpty()
     @Min(0, { message: "Percentage must be positive" })
     salePercentage: number = 0;
 
-    @Prop({ requiredIf: (product: Product) => product.isOnSale })
+    @Prop({required: false })
     @IsNotEmpty()
     @Min(0, { message: "Stock quantity must be positive" })
     stockQuantity: number;
 
     @Prop({ required: true })
     @IsNotEmpty()
-    bussinesId: string;
+    businessId: string;
 
     @Prop({ required: true })
     @IsNotEmpty()
