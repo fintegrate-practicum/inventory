@@ -23,7 +23,7 @@ export class ComponentService {
 
   //פונקציה לולידציות על הקלט
   private async validateParams(newComponent: Component) {
-    let sameComponent = await this.componentModel.findOne({ componentName: newComponent.componentName, isActive: true })
+    let sameComponent = await this.componentModel.findOne({ name: newComponent.name, isActive: true })
     if (sameComponent)
       throw new ConflictException('there is already same component');
   }

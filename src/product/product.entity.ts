@@ -11,15 +11,15 @@ export class Product extends Document {
     @Prop({ required: true, unique: true })
     @IsNotEmpty()
     @Length(3, 20, { message: "Product name must be between 3 and 20 letters" })
-    productName: string;
+    name: string;
 
     @Prop({ required: true })
     @IsNotEmpty()
-    productDescription: string;
+    description: string;
 
     @Prop({ required: true })
     @IsNotEmpty()
-    componentsImages: string[];
+    images: string[];
 
     @Prop({ required: true })
     @IsNotEmpty()
@@ -58,7 +58,7 @@ export class Product extends Document {
 
     @Prop({ required: true })
     @IsNotEmpty()
-    bussinesId: string;
+    businessId: string;
 
     @Prop({ required: true })
     @IsNotEmpty()

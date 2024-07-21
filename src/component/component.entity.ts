@@ -11,7 +11,7 @@ export class Component extends Document {
     @Prop({ required: true, unique: true })
     @IsNotEmpty()
     @Length(3, 20, { message: "Name must be between 3 and 20 letters" })
-    componentName: string;
+    name: string;
 
     @Prop({ required: true })
     @IsNotEmpty()
@@ -28,7 +28,7 @@ export class Component extends Document {
 
     @Prop({ required: true })
     @Min(0, { message: "Stock must be positive" })
-    componentStock: number;
+    stockQuantity: number;
 
     @Prop({ required: true })
     isActive: boolean = false;
@@ -40,32 +40,32 @@ export class Component extends Document {
     @Prop({ required: true })
     isSoldSeparately: boolean = false;
 
-    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately })
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
-    componentDescription: string;
+    description: string;
 
-    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately })
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
-    salePrice: number;
+    totalPrice: number;
 
-    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately })
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
-    componentImages: string[];
+    images: string[];
 
-    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately })
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
-    isInSale: boolean = false;
+    isOnSale: boolean = false;
 
-    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately})
+    @Prop({ requiredIf: (component: Component) => component.isSoldSeparately })
     @ValidateIf((entity) => entity.isSoldSeparately)
     @IsNotEmpty()
     @Min(0, { message: "Percentage must be positive" })
     salePercentage: number = 0;
-   
+
     @Prop({ required: false })
     componentColor: string;
 

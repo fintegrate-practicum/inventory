@@ -40,7 +40,7 @@ export class ProductService {
       throw new ForbiddenException('Insufficient permissions to add a new product.');
     try {
       await this.validateProduct(productData)
-      let sameName = await this.productModel.findOne({ productName: productData.productName, isActive: true })
+      let sameName = await this.productModel.findOne({ name: productData.name, isActive: true })
       if (sameName)
         throw new ConflictException('a product with the same name already exists');
       const newProduct = await this.productModel.create(productData);
