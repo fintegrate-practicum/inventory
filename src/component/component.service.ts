@@ -15,16 +15,10 @@ export class ComponentService {
     if (!this.userHasBusinessManagerPermission(adminId)) {//אמור לשלוף אותו מהטוקן
       throw new ForbiddenException('Insufficient permissions to add a new component.');
     }
-    try {
-      await this.validateComponent(ComponentData);
-      await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
-      const newComponent = await this.componentModel.create(ComponentData);
-      console.log("submit from server");
-      return newComponent;
-    }
-    catch (err) {
-      console.log(err);
-    }
+    await this.validateComponent(ComponentData);
+    await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
+    const newComponent = await this.componentModel.create(ComponentData);
+    return newComponent;
   }
 
   //פונקציה לולידציות על הקלט
@@ -65,13 +59,10 @@ export class ComponentService {
   }
 
   async validateComponent(componentData: any): Promise<void> {
-    console.log("validate")
     const { error } = await componentValidationSchema.validateAsync(componentData);
-    console.log("validate1")
     if (error) {
       throw new BadRequestException('Component data is invalid.', error.details.map(err => err.message));
     }
-    console.log("validate2")
   }
 
 

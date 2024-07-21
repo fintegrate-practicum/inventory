@@ -3,7 +3,7 @@ import { Product } from './product.entity';
 import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { log } from 'console';
+
 /////for example only////////
 @Injectable()
 export class ProductService {
@@ -29,7 +29,6 @@ export class ProductService {
   async softDeleteProduct(productId: string): Promise<void> {
     const product = await this.productModel.findOne({ where: { id: productId } });
     if (!product) {
-      console.log('Product not found.');
       throw new NotFoundException('Product not found.');
     }
     product.isActive = false;
@@ -70,8 +69,6 @@ export class ProductService {
 
   async validateProduct(updatedFields: any): Promise<void> {
     const { error } = await productValidationSchema.validateAsync(updatedFields);
-    console.log("addProduct from service");
-
     if (error) {
       throw new BadRequestException('Component data is invalid.', error.details.map(err => err.message));
     }

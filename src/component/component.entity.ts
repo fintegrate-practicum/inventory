@@ -66,11 +66,9 @@ export class Component extends Document {
     @Min(0, { message: "Percentage must be positive" })
     salePercentage: number = 0;
    
-    @Length(0)
     @Prop({ required: false })
     componentColor: string;
 
-    @Length(0)
     @Prop({ required: false })
     componentSize: string;
 
