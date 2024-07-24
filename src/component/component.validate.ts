@@ -28,7 +28,7 @@ export const componentValidationSchema: Joi.ObjectSchema = Joi.object({
     then: Joi.string().required(),
     otherwise: Joi.string().optional()
   }),
-  salePrice: Joi.when('isSoldSeparately', {
+  totalPrice: Joi.when('isSoldSeparately', {
     is: true,
     then: Joi.number().required(),
     otherwise: Joi.number().optional()
