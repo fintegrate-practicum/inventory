@@ -8,7 +8,7 @@ import { NotFoundException } from '@nestjs/common';
 
 describe('ProductController', () => {
   let app: INestApplication;
-  let productService = {
+  const productService = {
     updateProduct: jest.fn().mockImplementation((id, update) => ({
       ...update,
       id,
@@ -26,12 +26,12 @@ describe('ProductController', () => {
     await app.init();
   });
 
-  it('/PUT api/inventory/product/:productId should update the product successfully', async () => {
+  it('/PUT inventory/product/:productId should update the product successfully', async () => {
     const productId = new Types.ObjectId().toString();
     const updatedFields = { name: 'Updated Product', price: 100 };
 
     const response = await request(app.getHttpServer())
-      .put(`/api/inventory/product/${productId}`)
+      .put(`/inventory/product/${productId}`)
       .send(updatedFields)
       .expect(200);
 
@@ -45,13 +45,15 @@ describe('ProductController', () => {
     expect(productService.updateProduct).toHaveBeenCalledWith(objectId, updatedFields);
   });
 
-  it('/PUT api/inventory/product/:productId should return an error if product update fails', async () => {
+  it('/PUT inventory/product/:productId should return an error if product update fails', async () => {
     const productId = new Types.ObjectId().toString();
     const updatedFields = { name: 'Updated Product', price: 100 };
-    productService.updateProduct.mockRejectedValueOnce(new NotFoundException('Product not found'));
+    productService.updateProduct.mockRejectedValueOnce(
+      new NotFoundException('Product not found'),
+    );
 
     const response = await request(app.getHttpServer())
-      .put(`/api/inventory/product/${productId}`)
+      .put(`/inventory/product/${productId}`)
       .send(updatedFields)
       .expect(404);
 
@@ -70,4 +72,3 @@ describe('ProductController', () => {
     await app.close();
   });
 });
-
