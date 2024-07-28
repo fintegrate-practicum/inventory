@@ -16,7 +16,7 @@ import { ComponentService } from './component.service';
 import { Component } from './component.entity';
 import { Types } from 'mongoose';
 
-@Controller('inventory/component')
+@Controller('api/inventory/component')
 export class ComponentController {
   constructor(private readonly componentService: ComponentService) {}
 

@@ -2,7 +2,7 @@ import { Controller, Get, Param, Delete, Body, Post, Put, Headers } from '@nestj
 import { ProviderService } from './provider.service';
 import { Provider } from './provider.entity';
 
-@Controller('inventory/provider')
+@Controller('api/inventory/provider')
 export class ProviderController {
   constructor(private readonly ProviderService: ProviderService) {}
 

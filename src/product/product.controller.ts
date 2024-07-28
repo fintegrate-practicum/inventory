@@ -15,7 +15,7 @@ import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { Types } from 'mongoose';
 
-@Controller('inventory/product')
+@Controller('api/inventory/product')
 export class ProductController {
   constructor(private readonly productsService: ProductService) {}
 
