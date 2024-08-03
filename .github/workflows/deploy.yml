@@ -33,7 +33,7 @@ jobs:
           service_account: 'my-service-account@fintegrate-f.iam.gserviceaccount.com'
 
           # projects/927688248564/locations/global/workloadIdentityPools/inventory/providers/my-repo
-          # projects/927688248564/locations/global/workloadIdentityPools/inventory/providers/my-repo
+
       - name: Docker Auth
         id: docker-auth
         uses: 'docker/login-action@v1'
