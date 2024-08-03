@@ -29,10 +29,9 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: 'id_token'
-          access_type: 'offline'
-          # workload_identity_provider: 'projects/927688248564/locations/global/workloadIdentityPools/github/providers/my-repo-1'
           workload_identity_provider: 'projects/927688248564/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
           service_account: 'my-service-account@fintegrate-f.iam.gserviceaccount.com'
+          id_token_audience: 'https://github.com/fintegrate-f/repo1'
 
       - name: Docker Auth
         id: docker-auth
