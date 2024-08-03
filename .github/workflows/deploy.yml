@@ -28,10 +28,9 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v2
         with:
-          token_format: 'id_token'
+          token_format: 'access_token'
           workload_identity_provider: 'projects/927688248564/locations/global/workloadIdentityPools/github/providers/my-repo-1'
           service_account: 'my-service-account@fintegrate-f.iam.gserviceaccount.com'
-          project_id: ${{ env.PROJECT_ID }}
 
       - name: Docker Auth
         id: docker-auth
