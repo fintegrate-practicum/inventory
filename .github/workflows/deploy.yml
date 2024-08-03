@@ -29,10 +29,12 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: 'id_token'
-          workload_identity_provider: 'projects/927688248564/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          workload_identity_provider: 'projects/927688248564/locations/global/workloadIdentityPools/inventory/providers/my-repo'
           service_account: 'my-service-account@fintegrate-f.iam.gserviceaccount.com'
           id_token_audience: 'https://github.com/fintegrate-f'
 
+          # projects/927688248564/locations/global/workloadIdentityPools/inventory/providers/my-repo
+          # projects/927688248564/locations/global/workloadIdentityPools/inventory/providers/my-repo
       - name: Docker Auth
         id: docker-auth
         uses: 'docker/login-action@v1'
