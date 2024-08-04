@@ -43,6 +43,9 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
           registry: ${{ env.GAR_LOCATION }}-docker.pkg.dev
 
+      - name: Print Access Token
+        run: echo ${{ steps.auth.outputs.access_token }}
+
       - name: Build and Push Container
         run: |
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO}}/${{ env.IMAGE }}:${{ github.sha }}" ./
