@@ -35,16 +35,9 @@ jobs:
           # service_account: 'my-service-account@fintegrate-f.iam.gserviceaccount.com'
           # projects/927688248564/locations/global/workloadIdentityPools/inventory/providers/my-repo
 
-      - name: Check Google Auth Output
-        if: failure()
-        run: |
-          echo "Google Auth failed"
-          echo "Error: ${{ steps.auth.outputs.error }}"
-          echo "Access Token: ${{ steps.auth.outputs.access_token }}"
-
       - name: Docker Auth
         id: docker-auth
-        uses: 'docker/login-action@v1'
+        uses: 'docker/login-action@v2'
         with:
           username: 'oauth2accesstoken'
           password: ${{ steps.auth.outputs.access_token }}
