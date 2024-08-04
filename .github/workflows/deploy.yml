@@ -31,7 +31,7 @@ jobs:
           credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
       - name: Verify Access Token
-        run: echo "Access Token: ${{ steps.auth.outputs}}"
+        run: echo "Access Token ${{ steps.auth.outputs}}"
 
       - name: Docker Auth
         id: docker-auth
