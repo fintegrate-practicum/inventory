@@ -30,11 +30,6 @@ jobs:
         with:
           credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
           scopes: 'https://www.googleapis.com/auth/cloud-platform'
-          # token_format: 'access_token'
-          # workload_identity_provider: 'projects/927688248564/locations/global/workloadIdentityPools/inventory/providers/my-repo'
-          # workload_identity_provider: 'projects/927688248564/locations/global/workloadIdentityPools/inventory-pool/providers/inventory-provider'
-          # service_account: 'my-service-account@fintegrate-f.iam.gserviceaccount.com'
-          # projects/927688248564/locations/global/workloadIdentityPools/inventory/providers/my-repo
 
       - name: Docker Auth
         id: docker-auth
