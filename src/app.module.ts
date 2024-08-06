@@ -6,16 +6,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
 import { ProviderModule } from './provider/provider.module';
-import { AuthzModule } from 'fintegrate-auth'
+import { AuthzModule } from 'fintegrate-auth';
 
 @Module({
   imports: [
-	AuthzModule,
+    AuthzModule,
     ConfigModule.forRoot({ envFilePath: '.env' }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: process.env.MONGODB_URI,
+        uri: process.env.MONGO_URI,
       }),
       inject: [ConfigService],
     }),
