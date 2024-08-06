@@ -6,11 +6,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
 import { ProviderModule } from './provider/provider.module';
-import { AuthzModule } from 'fintegrate-auth'
+import { AuthzModule } from 'fintegrate-auth';
+import { LoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
-	AuthzModule,
+    LoggerModule,
+    AuthzModule,
     ConfigModule.forRoot({ envFilePath: '.env' }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
