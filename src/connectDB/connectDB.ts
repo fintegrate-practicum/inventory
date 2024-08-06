@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
+    await mongoose.connect(process.env.MONGO_ATLAS, {
       dbName: process.env.DM_NAME,
     });
     console.log('MongoDB Connected Successfully');

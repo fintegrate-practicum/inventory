@@ -15,7 +15,7 @@ import { ProviderModule } from './provider/provider.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: process.env.MONGODB_URI,
+        uri: process.env.MONGO_ATLAS,
       }),
       inject: [ConfigService],
     }),
