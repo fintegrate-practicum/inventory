@@ -15,7 +15,7 @@ import { AuthzModule } from 'fintegrate-auth';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => ({
-        uri: process.env.MONGO_URI,
+        uri: process.env.MONGODB_URI,
       }),
       inject: [ConfigService],
     }),
