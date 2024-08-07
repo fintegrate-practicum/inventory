@@ -20,7 +20,7 @@ export class ProductController {
         }
     }
 
-    @Get()
+    @Get(':buisnessId')
     async getAllProducts(
         @Param('buisnessId') buisnessId: string
     ) {
