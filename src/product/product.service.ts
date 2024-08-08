@@ -8,8 +8,8 @@ import { Model, Types } from 'mongoose';
 export class ProductService {
   constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
 
-  async getProductById(productId: string): Promise<Product> {
-    const product = await this.productModel.findOne({ _id: new Types.ObjectId(productId), isActive: true }).exec();
+  async getProductById(productId:  Types.ObjectId): Promise<Product> {
+    const product = await this.productModel.findOne({ _id: productId, isActive: true }).exec();
     if (!product)
       throw new NotFoundException('Product not found.');
     return product;
