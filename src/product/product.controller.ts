@@ -7,24 +7,18 @@ import { Types } from 'mongoose';
 export class ProductController {
     constructor(private readonly productsService: ProductService) { }
 
-    @Get(':productId')
-    async getProductById(@Param('productId') productId: string) {
-        try {
-            const product = await this.productsService.getProductById(productId);
+    @Get(':idOrBusiness')
+    async getProductOrProducts(@Param('idOrBusiness') idOrBusiness: string) {
+        if (Types.ObjectId.isValid(idOrBusiness)) {
+            const product = await this.productsService.getProductById(new Types.ObjectId(idOrBusiness));
             if (!product) {
                 throw new NotFoundException('Product not found');
             }
             return product;
-        } catch (error) {
-            throw new BadRequestException(error.message);
+        } else {
+            const products = await this.productsService.getProductByBusinessId(idOrBusiness);
+            return products;
         }
-    }
-
-    @Get(':buisnessId')
-    async getAllProducts(
-        @Param('buisnessId') buisnessId: string
-    ) {
-        return await this.productsService.getProductByBusinessId(buisnessId);
     }
 
     @Put('sale')
