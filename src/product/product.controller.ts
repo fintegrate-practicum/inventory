@@ -13,10 +13,14 @@ import {
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { Types } from 'mongoose';
+import { Injectable, Logger } from '@nestjs/common';
+
 
 @Controller('api/inventory/product')
 export class ProductController {
-  constructor(private readonly productsService: ProductService) {}
+    private readonly logger = new Logger(ProductController.name);
+
+    constructor(private readonly productsService: ProductService) { }
 
   @Get(':productId')
   async getProductById(@Param('productId') productId: string) {
@@ -63,7 +67,7 @@ export class ProductController {
       const createdProduct = await this.productsService.addNewProduct(newProduct, token);
       return { message: 'Product added successfully', product: createdProduct };
     } catch (err) {
-      throw new BadRequestException(err.message);
+      this.logger.log(err);
     }
   }
 
