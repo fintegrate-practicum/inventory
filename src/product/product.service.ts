@@ -5,7 +5,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
 
-/////for example only////////
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
