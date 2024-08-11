@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Headers, Delete, Put, Get, HttpException, HttpStatus, ValidationPipe, Param, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Body, Headers, Delete, Put, Get, HttpException, HttpStatus, ValidationPipe, Param, BadRequestException } from '@nestjs/common';
 import { ComponentService } from './component.service';
 import { Component } from './component.entity';
 import { Types } from 'mongoose';
@@ -29,13 +29,16 @@ export class ComponentController {
     return await this.componentService.updateComponent(objectId, updatedFields);
   }
 
-  @Get(':idOrBusiness')
-  async getComponentOrComponents(@Param('idOrBusiness') idOrBusiness: string) {
-    if (Types.ObjectId.isValid(idOrBusiness)) {
-      return await this.componentService.getComponentById(idOrBusiness);
-    } else {
-      return await this.componentService.getAllComponents(idOrBusiness);
-    }
+  @Get('businessId/:businessId')
+  getAllComponents(
+    @Param('businessId') businessId: string
+  ) {
+    return this.componentService.getAllComponents(businessId);
+  }
+
+  @Get(':componentId')
+  getComponentById(@Param('componentId') componentId: string) {
+    return this.componentService.getComponentById(componentId);
   }
 
   private convertToObjectId(id: string): Types.ObjectId {

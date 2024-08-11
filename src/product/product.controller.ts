@@ -22,7 +22,7 @@ export class ProductController {
 
     @Get()
     async getAllProducts(
-        @Param('buisnessId') buisnessId: string
+        @Param('buisnessId/:buisnessId') buisnessId: string
     ) {
         return await this.productsService.getProductByBusinessId(buisnessId);
     }
