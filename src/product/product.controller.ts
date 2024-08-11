@@ -20,11 +20,11 @@ export class ProductController {
         }
     }
 
-    @Get()
+    @Get('businessId/:businessId')
     async getAllProducts(
-        @Param('buisnessId/:buisnessId') buisnessId: string
+        @Param('businessId') businessId: string
     ) {
-        return await this.productsService.getProductByBusinessId(buisnessId);
+        return await this.productsService.getProductByBusinessId(businessId);
     }
 
     @Put('sale')
