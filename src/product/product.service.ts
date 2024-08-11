@@ -1,12 +1,15 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from '@nestjs/common';
 import { Product } from './product.entity';
 import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
+
 /////for example only////////
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
+
   constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
   async getAllProducts(): Promise<Product[]> {
     const products = await this.productModel.find({ isActive: true });
@@ -48,7 +51,7 @@ export class ProductService {
 
     }
     catch (err) {
-      console.log(err);
+      this.logger.log(err);
     }
 
   }
@@ -63,7 +66,7 @@ export class ProductService {
     if (!product) {
       throw new NotFoundException('Component not found.');
     }
-    console.log("The product is updated");
+    this.logger.log("The product is updated");
     return product;
   }
 
