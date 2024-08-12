@@ -28,9 +28,9 @@ export class ComponentService {
       throw new ConflictException('there is already same component');
   }
 
-  async getAllComponents(): Promise<Component[]> {
+  async getAllComponents(businessId:string): Promise<Component[]> {
     // adminId-token
-    const components = await this.componentModel.find({ isActive: true });
+    const components = await this.componentModel.find({businessId, isActive: true });
     return components;
   }
 

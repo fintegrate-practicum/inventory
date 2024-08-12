@@ -29,10 +29,13 @@ export class ComponentController {
     return await this.componentService.updateComponent(objectId, updatedFields);
   }
 
-  @Get()
-  getAllComponents() {
-    return this.componentService.getAllComponents();
+  @Get('businessId/:businessId')
+  getAllComponents(
+    @Param('businessId') businessId: string
+  ) {
+    return this.componentService.getAllComponents(businessId);
   }
+
   @Get(':componentId')
   getComponentById(@Param('componentId') componentId: string) {
     return this.componentService.getComponentById(componentId);
