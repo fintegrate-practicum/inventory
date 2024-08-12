@@ -6,11 +6,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductModule } from './product/product.module';
 import { ProviderModule } from './provider/provider.module';
-import { AuthzModule } from 'fintegrate-auth'
+import { AuthzModule } from 'fintegrate-auth';
+import { PapertrailLogger } from './logger';
 
 @Module({
   imports: [
-	AuthzModule,
+    AuthzModule,
     ConfigModule.forRoot({ envFilePath: '.env' }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -24,6 +25,6 @@ import { AuthzModule } from 'fintegrate-auth'
     ProviderModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService ,PapertrailLogger],
 })
 export class AppModule {}

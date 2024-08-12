@@ -2,9 +2,13 @@ import { Controller, Delete, Get, Param, Put, Post, Body, Headers, BadRequestExc
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { Types } from 'mongoose';
+import { Injectable, Logger } from '@nestjs/common';
+
 
 @Controller('api/inventory/product')
 export class ProductController {
+    private readonly logger = new Logger(ProductController.name);
+
     constructor(private readonly productsService: ProductService) { }
 
     @Get(':productId')
