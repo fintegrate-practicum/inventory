@@ -11,7 +11,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
-  // הגדרת מגבלת גודל לבקשות JSON ו-URL encoded
   app.use(bodyParser.json({ limit: '20mb' }));
   app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));  
 
@@ -22,5 +21,3 @@ async function bootstrap() {
   connectDB();
 }
 bootstrap();
-
-
