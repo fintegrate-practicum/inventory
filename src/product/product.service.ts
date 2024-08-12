@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from '@nestjs/common';
 import { Product } from './product.entity';
 import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,6 +6,8 @@ import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class ProductService {
+  private readonly logger = new Logger(ProductService.name);
+
   constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
 
   async getProductById(productId: string): Promise<Product> {
@@ -42,6 +44,7 @@ export class ProductService {
     } catch (err) {
       console.log(err);
       throw new BadRequestException('Failed to add new product', err.message);
+
     }
   }
 
