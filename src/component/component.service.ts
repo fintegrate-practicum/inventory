@@ -8,7 +8,6 @@ import {
 import { Component } from './component.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import * as Joi from '@hapi/joi';
 import { componentValidationSchema } from './component.validate';
 
 @Injectable()
@@ -40,8 +39,10 @@ export class ComponentService {
     }
   }
 
-  async getAllComponents(): Promise<Component[]> {
-    return this.componentModel.find({ isActive: true });
+  async getAllComponents(businessId: string): Promise<Component[]> {
+    // adminId-token
+    const components = await this.componentModel.find({ businessId, isActive: true });
+    return components;
   }
 
   async getComponentById(componentId: string): Promise<Component> {
@@ -105,12 +106,13 @@ export class ComponentService {
     await component.save();
   }
 
-  private async checkComponentOrderedByUser(componentId: string): Promise<boolean> {
-    // Implementation to check if the component has been ordered by the user
-    return true;
-  }
+  // private async checkComponentOrderedByUser(componentId: string): Promise<boolean> {
+  //   // Implementation to check if the component has been ordered by the user
+  //   return true;
+  // }
 
   public userHasBusinessManagerPermission(adminId: string): boolean {
+    console.log(adminId);
     // Implementation to check if the user has business manager permission
     return true;
   }

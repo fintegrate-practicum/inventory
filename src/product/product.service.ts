@@ -1,19 +1,21 @@
-import { Injectable, Logger, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { Product } from './product.entity';
 import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
-
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
 
-  constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
-  async getAllProducts(): Promise<Product[]> {
-    const products = await this.productModel.find({ isActive: true }).exec();
-    return products;
-  }
+  constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) {}
 
   async getProductById(productId: string): Promise<Product> {
     const product = await this.productModel
@@ -57,19 +59,15 @@ export class ProductService {
     }
   }
 
-  async updateProduct(productId: string, updatedFields: any): Promise<Product> {
+  async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {
     await this.validateProduct(updatedFields);
     const product = await this.productModel
-      .findOneAndUpdate(
-        { _id: new Types.ObjectId(productId), isActive: true },
-        updatedFields,
-        { new: true },
-      )
+      .findOneAndUpdate({ _id: productId, isActive: true }, updatedFields, { new: true })
       .exec();
     if (!product) {
       throw new NotFoundException('Product not found.');
     }
-    this.logger.log("The product is updated");
+    this.logger.log('The product is updated');
     return product;
   }
 
@@ -100,6 +98,7 @@ export class ProductService {
 
   private userHasBusinessManagerPermission(adminId: string): boolean {
     // Implement permission check logic here
+    console.log(adminId);
     return true;
   }
 }

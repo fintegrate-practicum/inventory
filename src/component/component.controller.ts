@@ -1,22 +1,37 @@
-import { Controller, Post, Body, Headers, Delete, Put, Get, HttpException, HttpStatus, ValidationPipe, Param, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Headers,
+  Delete,
+  Put,
+  Get,
+  Param,
+  BadRequestException,
+} from '@nestjs/common';
 import { ComponentService } from './component.service';
 import { Component } from './component.entity';
 import { Types } from 'mongoose';
 
 @Controller('api/inventory/component')
 export class ComponentController {
-
-  constructor(private readonly componentService: ComponentService) { }
+  constructor(private readonly componentService: ComponentService) {}
 
   @Delete(':componentId')
-  async softDeleteComponent(@Headers('x-access-token') token: string, @Param('componentId') componentId: Types.ObjectId) {
+  async softDeleteComponent(
+    @Headers('x-access-token') token: string,
+    @Param('componentId') componentId: Types.ObjectId,
+  ) {
     await this.componentService.softDeleteComponent(componentId, token);
     return { message: 'Component soft deleted successfully' };
   }
 
   @Post()
-  async addNewComponent(@Headers('x-access-token') token: string, @Body() newComponent: Component) {
-    await this.componentService.addNewComponent(newComponent, token);//שליחה לפונקציה של Service
+  async addNewComponent(
+    @Headers('x-access-token') token: string,
+    @Body() newComponent: Component,
+  ) {
+    await this.componentService.addNewComponent(newComponent, token); //שליחה לפונקציה של Service
     return { message: 'component added succesfully' };
   }
 
@@ -29,10 +44,11 @@ export class ComponentController {
     return await this.componentService.updateComponent(objectId, updatedFields);
   }
 
-  @Get()
-  getAllComponents() {
-    return this.componentService.getAllComponents();
+  @Get('businessId/:businessId')
+  getAllComponents(@Param('businessId') businessId: string) {
+    return this.componentService.getAllComponents(businessId);
   }
+
   @Get(':componentId')
   getComponentById(@Param('componentId') componentId: string) {
     return this.componentService.getComponentById(componentId);
@@ -44,5 +60,4 @@ export class ComponentController {
     }
     return new Types.ObjectId(id);
   }
-
 }

@@ -8,36 +8,27 @@ import {
   Body,
   Headers,
   BadRequestException,
-  NotFoundException,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { Types } from 'mongoose';
-import { Injectable, Logger } from '@nestjs/common';
-
+import { Logger } from '@nestjs/common';
 
 @Controller('api/inventory/product')
 export class ProductController {
-    private readonly logger = new Logger(ProductController.name);
+  private readonly logger = new Logger(ProductController.name);
 
-    constructor(private readonly productsService: ProductService) { }
+  constructor(private readonly productsService: ProductService) {}
 
   @Get(':productId')
   async getProductById(@Param('productId') productId: string) {
-    try {
-      const product = await this.productsService.getProductById(productId);
-      if (!product) {
-        throw new NotFoundException('Product not found');
-      }
-      return product;
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+    const product = await this.productsService.getProductById(productId);
+    return product;
   }
 
-  @Get()
-  async getAllProducts() {
-    return await this.productsService.getAllProducts();
+  @Get('businessId/:businessId')
+  async getAllProducts(@Param('businessId') businessId: string) {
+    return await this.productsService.getProductByBusinessId(businessId);
   }
 
   @Put('sale')
@@ -55,7 +46,7 @@ export class ProductController {
     @Body() updatedFields: any,
   ): Promise<Product> {
     const objectId = this.convertToObjectId(productId);
-    return await this.productsService.updateProduct(productId, updatedFields);
+    return await this.productsService.updateProduct(objectId, updatedFields);
   }
 
   @Post()
@@ -67,7 +58,7 @@ export class ProductController {
       const createdProduct = await this.productsService.addNewProduct(newProduct, token);
       return { message: 'Product added successfully', product: createdProduct };
     } catch (err) {
-      this.logger.log(err);
+      throw new BadRequestException(err.message);
     }
   }
 
