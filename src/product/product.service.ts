@@ -1,4 +1,11 @@
-import { Injectable, Logger, NotFoundException, ForbiddenException, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 import { Product } from './product.entity';
 import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,12 +15,13 @@ import { Model, Types } from 'mongoose';
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
 
-  constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
+  constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) {}
 
   async getProductById(productId: string): Promise<Product> {
-    const product = await this.productModel.findOne({ _id: new Types.ObjectId(productId), isActive: true }).exec();
-    if (!product)
-      throw new NotFoundException('Product not found.');
+    const product = await this.productModel
+      .findOne({ _id: new Types.ObjectId(productId), isActive: true })
+      .exec();
+    if (!product) throw new NotFoundException('Product not found.');
     return product;
   }
 
@@ -23,7 +31,9 @@ export class ProductService {
   }
 
   async softDeleteProduct(productId: string): Promise<void> {
-    const product = await this.productModel.findOne({ _id: new Types.ObjectId(productId) }).exec();
+    const product = await this.productModel
+      .findOne({ _id: new Types.ObjectId(productId) })
+      .exec();
     if (!product) {
       throw new NotFoundException('Product not found.');
     }
@@ -36,7 +46,9 @@ export class ProductService {
       throw new ForbiddenException('Insufficient permissions to add a new product.');
     try {
       await this.validateProduct(productData);
-      const sameName = await this.productModel.findOne({ name: productData.name, isActive: true }).exec();
+      const sameName = await this.productModel
+        .findOne({ name: productData.name, isActive: true })
+        .exec();
       if (sameName)
         throw new ConflictException('A product with the same name already exists');
       const newProduct = new this.productModel(productData);
@@ -44,27 +56,28 @@ export class ProductService {
     } catch (err) {
       console.log(err);
       throw new BadRequestException('Failed to add new product', err.message);
-
     }
   }
 
-  async updateProduct(productId: string, updatedFields: any): Promise<Product> {
+  async updateProduct(productId: Types.ObjectId, updatedFields: any): Promise<Product> {
     await this.validateProduct(updatedFields);
-    const product = await this.productModel.findOneAndUpdate(
-      { _id: new Types.ObjectId(productId), isActive: true },
-      updatedFields,
-      { new: true }
-    ).exec();
+    const product = await this.productModel
+      .findOneAndUpdate({ _id: productId, isActive: true }, updatedFields, { new: true })
+      .exec();
     if (!product) {
       throw new NotFoundException('Product not found.');
     }
+    this.logger.log('The product is updated');
     return product;
   }
 
   async validateProduct(updatedFields: any): Promise<void> {
     const { error } = await productValidationSchema.validateAsync(updatedFields);
     if (error) {
-      throw new BadRequestException('Product data is invalid.', error.details.map(err => err.message));
+      throw new BadRequestException(
+        'Product data is invalid.',
+        error.details.map((err) => err.message),
+      );
     }
   }
 
@@ -72,15 +85,20 @@ export class ProductService {
     if (!this.userHasBusinessManagerPermission(adminId))
       throw new ForbiddenException('Insufficient permissions to update products.');
 
-    const managerProducts = await this.productModel.find({ adminId, isActive: true }).exec();
-    await Promise.all(managerProducts.map(async (product: Product) => {
-      product.salePercentage = newSalePercentage;
-      return product.save();
-    }));
+    const managerProducts = await this.productModel
+      .find({ adminId, isActive: true })
+      .exec();
+    await Promise.all(
+      managerProducts.map(async (product: Product) => {
+        product.salePercentage = newSalePercentage;
+        return product.save();
+      }),
+    );
   }
 
   private userHasBusinessManagerPermission(adminId: string): boolean {
     // Implement permission check logic here
+    console.log(adminId);
     return true;
   }
 }

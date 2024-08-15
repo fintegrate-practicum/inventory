@@ -1,54 +1,73 @@
-import { Injectable, ForbiddenException, BadRequestException, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  BadRequestException,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { Component } from './component.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import * as Joi from '@hapi/joi';
-import { componentValidationSchema } from "./component.validate"
+import { componentValidationSchema } from './component.validate';
 
-// /////////////// for example only/////////////////////////
 @Injectable()
 export class ComponentService {
+  constructor(
+    @InjectModel(Component.name) private readonly componentModel: Model<Component>,
+  ) {}
 
-  constructor(@InjectModel(Component.name) private readonly componentModel: Model<Component>) { }
-
-  async addNewComponent(ComponentData: any, adminId: string): Promise<any> {
-    if (!this.userHasBusinessManagerPermission(adminId)) {//אמור לשלוף אותו מהטוקן
+  async addNewComponent(componentData: any, adminId: string): Promise<Component> {
+    if (!this.userHasBusinessManagerPermission(adminId)) {
       throw new ForbiddenException('Insufficient permissions to add a new component.');
     }
-    await this.validateComponent(ComponentData);
-    await this.validateParams(ComponentData) //בדיקה האם אין רכיב בשם זה
-    const newComponent = await this.componentModel.create(ComponentData);
+
+    await this.validateComponent(componentData);
+    await this.validateParams(componentData); // Check if a component with this name exists
+
+    const newComponent = new this.componentModel(componentData);
+    await newComponent.save();
     return newComponent;
   }
 
-  //פונקציה לולידציות על הקלט
-  private async validateParams(newComponent: Component) {
-    let sameComponent = await this.componentModel.findOne({ name: newComponent.name, isActive: true })
-    if (sameComponent)
-      throw new ConflictException('there is already same component');
+  private async validateParams(componentData: any): Promise<void> {
+    const sameComponent = await this.componentModel.findOne({
+      name: componentData.name,
+      isActive: true,
+    });
+    if (sameComponent) {
+      throw new ConflictException('A component with this name already exists.');
+    }
   }
 
-  async getAllComponents(businessId:string): Promise<Component[]> {
+  async getAllComponents(businessId: string): Promise<Component[]> {
     // adminId-token
-    const components = await this.componentModel.find({businessId, isActive: true });
+    const components = await this.componentModel.find({ businessId, isActive: true });
     return components;
   }
 
   async getComponentById(componentId: string): Promise<Component> {
-    const component = await this.componentModel.findOne({ isActive: true, id: componentId });
+    const component = await this.componentModel.findOne({
+      isActive: true,
+      _id: componentId,
+    });
 
-    if (!component)
-      throw new NotFoundException('component not found.');
+    if (!component) {
+      throw new NotFoundException('Component not found.');
+    }
 
     return component;
   }
 
-  async updateComponent(componentId: Types.ObjectId, updatedFields: any): Promise<Component> {
-    await this.validateComponent(updatedFields)
+  async updateComponent(
+    componentId: Types.ObjectId,
+    updatedFields: any,
+  ): Promise<Component> {
+    await this.validateComponent(updatedFields);
+
     const component = await this.componentModel.findOneAndUpdate(
-      { id: componentId, isActive: true },
+      { _id: componentId, isActive: true },
       updatedFields,
-      { new: true }
+      { new: true },
     );
 
     if (!component) {
@@ -61,36 +80,40 @@ export class ComponentService {
   async validateComponent(componentData: any): Promise<void> {
     const { error } = await componentValidationSchema.validateAsync(componentData);
     if (error) {
-      throw new BadRequestException('Component data is invalid.', error.details.map(err => err.message));
+      throw new BadRequestException(
+        'Component data is invalid.',
+        error.details.map((err) => err.message),
+      );
     }
   }
-
 
   async softDeleteComponent(componentId: Types.ObjectId, adminId: string): Promise<void> {
-    const component = await this.componentModel.findOne({ id: componentId });
+    const component = await this.componentModel.findOne({ _id: componentId });
 
     if (!component) {
-      throw new NotFoundException('Component not found');
+      throw new NotFoundException('Component not found.');
     }
 
-    //eraserId=לקבל מהtoken
+    // Check if the user has permission to delete the component
     if (component.adminId !== adminId) {
-      throw new Error('User does not have permission to delete this component');
+      throw new ForbiddenException(
+        'User does not have permission to delete this component.',
+      );
     }
 
+    // Soft delete by updating the isActive field
     component.isActive = false;
-    await this.componentModel.create(component);
+    await component.save();
   }
 
-  private async checkComponentOrderedByUser(componentId: string): Promise<boolean> {
-    //פה צריך לבדוק האם המשתמש הזמין את ההזמנה
-    return true;
-  }
+  // private async checkComponentOrderedByUser(componentId: string): Promise<boolean> {
+  //   // Implementation to check if the component has been ordered by the user
+  //   return true;
+  // }
+
   public userHasBusinessManagerPermission(adminId: string): boolean {
-    //  פה צריך לבדוק האם למנהל יש  הרשאת גישה  מהמנהל
+    console.log(adminId);
+    // Implementation to check if the user has business manager permission
     return true;
   }
-
 }
-
-

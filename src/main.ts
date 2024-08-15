@@ -12,7 +12,7 @@ async function bootstrap() {
   app.enableCors();
 
   app.use(bodyParser.json({ limit: '20mb' }));
-  app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));  
+  app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 
   const papertrailLogger = app.get(PapertrailLogger);
   app.useLogger(papertrailLogger);
