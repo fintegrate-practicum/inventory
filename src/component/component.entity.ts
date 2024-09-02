@@ -75,12 +75,10 @@ export class Component extends Document {
 
 export const ComponentSchema = SchemaFactory.createForClass(Component);
 
-// Add a virtual field 'id'
 ComponentSchema.virtual('id').get(function (this: Document & { _id: Types.ObjectId }) {
   return this._id.toHexString();
 });
 
-// Ensure virtual fields are serialized.
 ComponentSchema.set('toJSON', {
   virtuals: true,
 });

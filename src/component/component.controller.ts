@@ -31,7 +31,7 @@ export class ComponentController {
     @Headers('x-access-token') token: string,
     @Body() newComponent: Component,
   ) {
-    await this.componentService.addNewComponent(newComponent, token); //שליחה לפונקציה של Service
+    await this.componentService.addNewComponent(newComponent, token);
     return { message: 'component added succesfully' };
   }
 
