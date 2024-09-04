@@ -3,10 +3,10 @@ import { Document, SchemaTypes } from 'mongoose';
 
 @Schema()
 export class Variant extends Document {
-  @Prop({ required: false, type: SchemaTypes.Mixed })
+  @Prop({ required: true, type: SchemaTypes.Mixed })
   customFields: Record<string, any>;
 
-  @Prop({ required: false })
+  @Prop({ required: true })
   stockQuantity: number;
 
   @Prop({ required: false })
