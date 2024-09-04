@@ -6,7 +6,7 @@ const optionSchema = Joi.object({
 });
 
 export const customFieldSchema: Joi.ObjectSchema = Joi.object({
-  fieldName: Joi.string().optional(),
+  fieldName: Joi.string().required(),
   fieldType: Joi.string()
     .valid(
       'Button',
@@ -22,7 +22,7 @@ export const customFieldSchema: Joi.ObjectSchema = Joi.object({
       'MenuItem',
       'Input',
     )
-    .optional(),
+    .required(),
   options: Joi.array().items(optionSchema).optional().default([]),
   isRequired: Joi.boolean().default(false),
 });
