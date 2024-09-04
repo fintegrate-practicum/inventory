@@ -3,10 +3,10 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class CustomField extends Document {
-  @Prop({ required: false })
+  @Prop({ required: true })
   fieldName: string;
 
-  @Prop({ required: false })
+  @Prop({ required: true })
   fieldType: string;
 
   @Prop({ type: [Object], default: [] })
