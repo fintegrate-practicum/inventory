@@ -1,6 +1,8 @@
 import { Length, Min, IsNotEmpty, ValidateIf } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, SchemaTypes, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { VariantSchema, Variant } from '../entities/variant.entity';
+import { CustomFieldSchema, CustomField } from '../entities/customField.entity';
 
 @Schema()
 export class Product extends Document {
@@ -60,6 +62,12 @@ export class Product extends Document {
   @IsNotEmpty()
   @Length(3, 15, { message: 'Status must be between 3 and 15 letters' })
   componentStatus: string;
+
+  @Prop({ type: [CustomFieldSchema], default: [] })
+  customFields: CustomField[];
+
+  @Prop({ type: [VariantSchema], required: false })
+  variants: Variant[];
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

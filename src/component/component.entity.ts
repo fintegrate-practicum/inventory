@@ -1,6 +1,8 @@
-import { Length, Min, IsNotEmpty, ValidateIf, IsEmpty } from 'class-validator';
+import { Length, Min, IsNotEmpty, ValidateIf } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, SchemaTypes, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { CustomFieldSchema, CustomField } from '../entities/customField.entity';
+import { VariantSchema, Variant } from '../entities/variant.entity';
 
 @Schema()
 export class Component extends Document {
@@ -62,15 +64,15 @@ export class Component extends Document {
   @Min(0, { message: 'Percentage must be positive' })
   salePercentage: number;
 
-  @Prop({ required: false })
-  componentColor: string;
-
-  @Prop({ required: false })
-  componentSize: string;
-
   @Prop({ required: true })
   @IsNotEmpty()
   businessId: string;
+
+  @Prop({ type: [CustomFieldSchema], default: [] })
+  customFields: CustomField[];
+
+  @Prop({ type: [VariantSchema], required: false })
+  variants: Variant[];
 }
 
 export const ComponentSchema = SchemaFactory.createForClass(Component);

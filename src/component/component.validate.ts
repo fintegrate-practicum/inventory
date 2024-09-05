@@ -1,4 +1,6 @@
 import * as Joi from '@hapi/joi';
+import { customFieldSchema } from '../entities/customField.validate';
+import { variantSchema } from '../entities/variant.validate';
 
 export const componentValidationSchema: Joi.ObjectSchema = Joi.object({
   name: Joi.string().min(3).max(20).required().messages({
@@ -49,7 +51,11 @@ export const componentValidationSchema: Joi.ObjectSchema = Joi.object({
     }),
     otherwise: Joi.number().optional(),
   }),
-  componentColor: Joi.string().optional().allow(null, ''),
-  componentSize: Joi.string().optional().allow(null, ''),
   businessId: Joi.string().required(),
+  customFields: Joi.array().items(customFieldSchema).messages({
+    'array.includes': 'Custom fields are not valid',
+  }),
+  variants: Joi.array().items(variantSchema).messages({
+    'array.includes': 'Variants are not valid',
+  }),
 });

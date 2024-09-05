@@ -3,10 +3,18 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
 import { Product, ProductSchema } from './product.entity';
+import { CustomField, CustomFieldSchema } from '../entities/customField.entity';
+import { Variant, VariantSchema } from '../entities/variant.entity';
 
 @Module({
-    imports: [MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),],
-    controllers: [ProductController],
-    providers: [ProductService],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Product.name, schema: ProductSchema },
+      { name: Variant.name, schema: VariantSchema },
+      { name: CustomField.name, schema: CustomFieldSchema },
+    ]),
+  ],
+  controllers: [ProductController],
+  providers: [ProductService],
 })
-export class ProductModule { }
+export class ProductModule {}

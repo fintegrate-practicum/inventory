@@ -1,4 +1,6 @@
 import * as Joi from '@hapi/joi';
+import { customFieldSchema } from '../entities/customField.validate';
+import { variantSchema } from '../entities/variant.validate';
 
 export const productValidationSchema: Joi.ObjectSchema = Joi.object({
   name: Joi.string().min(3).max(20).required().messages({
@@ -44,5 +46,11 @@ export const productValidationSchema: Joi.ObjectSchema = Joi.object({
     'string.min': 'Status must be between 3 and 15 letters',
     'string.max': 'Status must be between 3 and 15 letters',
     'any.required': 'Component status is required',
+  }),
+  customFields: Joi.array().items(customFieldSchema).messages({
+    'array.includes': 'Custom fields are not valid',
+  }),
+  variants: Joi.array().items(variantSchema).messages({
+    'array.includes': 'Variants are not valid',
   }),
 });
