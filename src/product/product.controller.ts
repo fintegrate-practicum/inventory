@@ -3,6 +3,9 @@ import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { Types } from 'mongoose';
 import { Injectable, Logger } from '@nestjs/common';
+import { Res } from '@nestjs/common';
+
+
 
 
 @Controller('api/inventory/product')
@@ -58,5 +61,22 @@ export class ProductController {
             throw new BadRequestException('Invalid ObjectId format');
         }
         return new Types.ObjectId(id);
+    }
+
+    @Get('low-stock/:businessId')
+    async getLowStockProducts(
+        @Param('businessId') businessId: string,
+        @Res() response
+    ): Promise<void> {
+        try {
+            const result = await this.productsService.getLowStockProducts(businessId);
+            response.status(HttpStatus.OK).json(result);
+        } catch (error) {
+            this.logger.error('Failed to get result', error.stack);
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+                title: 'Failed to get result',
+                content: error.message,
+            });
+        }
     }
 }
