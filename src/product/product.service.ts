@@ -4,6 +4,7 @@ import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
+
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
@@ -16,6 +17,7 @@ export class ProductService {
 
   async getProductById(ProductId: string): Promise<Product> {
     const product = await this.productModel.findOne({ id: ProductId, isActive: true });
+
     if (!product)
       throw new NotFoundException('product not found.');
     return product;
@@ -45,6 +47,7 @@ export class ProductService {
         throw new ConflictException('a product with the same name already exists');
       const newProduct = await this.productModel.create(productData);
       return newProduct;
+
     }
     catch (err) {
       this.logger.log(err);
@@ -76,6 +79,7 @@ export class ProductService {
   async updateProductDiscount(newSalePercentage: number, adminId: string): Promise<void> {
     if (!this.userHasBusinessManagerPermission(adminId))
       throw new ForbiddenException('Insufficient permissions to update products.');
+
     const managerProducts = await this.productModel.find({ adminId, isActive: true });
     await Promise.all(managerProducts.map(async (product: Product) => {
       product.salePercentage = newSalePercentage;
@@ -84,38 +88,40 @@ export class ProductService {
   }
 
   private userHasBusinessManagerPermission(adminId: string): boolean {
-    return true;
+    return true;//בדיקת הרשאות גישה
   }
 
   async getLowStockProducts(businessId: string): Promise<{ productName: string; count: number }[]> {
     try {
+      // אגריגציה לשליפת 5 המוצרים עם המלאי הנמוך ביותר
       const lowStockProducts = await this.productModel.aggregate([
         {
           $match: {
-            businessId: businessId,
+            businessId: businessId, // סינון לפי מזהה עסק
           },
         },
         {
           $project: {
-            productName: "$name",
-            count: "$stockQuantity",
+            productName: "$name", // כלול את שם המוצר
+            count: "$stockQuantity", // כלול את כמות המלאי
           },
         },
         {
-          $sort: { count: 1 },
+          $sort: { count: 1 }, // מיין לפי כמות מלאי בסדר עולה
         },
         {
-          $limit: 5,
+          $limit: 5, // החזר רק את 5 המוצרים עם המלאי הנמוך ביותר
         },
         {
-          $unset: "_id"
+          $unset: "_id" // הסר את שדה ה-ID מהתוצאה
         }
       ]);
+  
       return lowStockProducts;
     } catch (error) {
       console.error('Failed to get low stock products:', error);
       throw new Error('Failed to get low stock products');
     }
   }
-}
+  }
 
