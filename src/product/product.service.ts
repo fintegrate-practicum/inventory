@@ -15,7 +15,7 @@ import { Model, Types } from 'mongoose';
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
 
-  constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) {}
+  constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
 
   async getProductById(productId: string): Promise<Product> {
     const product = await this.productModel
@@ -101,4 +101,31 @@ export class ProductService {
     console.log(adminId);
     return true;
   }
+
+  async getLowStockProducts(businessId: string): Promise<{ productName: string; count: number }[]> {
+    const lowStockProducts = await this.productModel.aggregate([
+      {
+        $match: {
+          businessId: businessId,
+        },
+      },
+      {
+        $project: {
+          productName: "$name",
+          count: "$stockQuantity",
+        },
+      },
+      {
+        $sort: { count: 1 },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $unset: "_id"
+      }
+    ]);
+    return lowStockProducts;
+  }
 }
+
