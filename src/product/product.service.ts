@@ -52,7 +52,7 @@ export class ProductService {
             text: "",
             type: 'email',
             kindSubject: 'message',
-            description: LowInventory.map(p => p.id),
+            description: LowInventory.map(p => p.name),
             date: new Date(Date.now()),
             managerName: admin.data.nameEmployee,
           },
