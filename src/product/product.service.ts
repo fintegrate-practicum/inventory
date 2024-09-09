@@ -103,36 +103,29 @@ export class ProductService {
   }
 
   async getLowStockProducts(businessId: string): Promise<{ productName: string; count: number }[]> {
-    try {
-      // אגריגציה לשליפת 5 המוצרים עם המלאי הנמוך ביותר
-      const lowStockProducts = await this.productModel.aggregate([
-        {
-          $match: {
-            businessId: businessId, // סינון לפי מזהה עסק
-          },
+    const lowStockProducts = await this.productModel.aggregate([
+      {
+        $match: {
+          businessId: businessId,
         },
-        {
-          $project: {
-            productName: "$name", // כלול את שם המוצר
-            count: "$stockQuantity", // כלול את כמות המלאי
-          },
+      },
+      {
+        $project: {
+          productName: "$name",
+          count: "$stockQuantity",
         },
-        {
-          $sort: { count: 1 }, // מיין לפי כמות מלאי בסדר עולה
-        },
-        {
-          $limit: 5, // החזר רק את 5 המוצרים עם המלאי הנמוך ביותר
-        },
-        {
-          $unset: "_id" // הסר את שדה ה-ID מהתוצאה
-        }
-      ]);
-
-      return lowStockProducts;
-    } catch (error) {
-      console.error('Failed to get low stock products:', error);
-      throw new Error('Failed to get low stock products');
-    }
+      },
+      {
+        $sort: { count: 1 },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $unset: "_id"
+      }
+    ]);
+    return lowStockProducts;
   }
 }
 
