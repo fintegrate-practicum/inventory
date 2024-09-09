@@ -53,7 +53,7 @@ export class ProductService {
             type: 'email',
             kindSubject: 'message',
             description: LowInventory.map(p => p.name),
-            date: new Date(Date.now()),
+            date: new Date(),
             managerName: admin.data.nameEmployee,
           },
         };
