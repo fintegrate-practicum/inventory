@@ -33,6 +33,7 @@ export class ProductService {
 
   async getProductByBusinessId(businessId: string): Promise<Product[]> {
     const products = await this.productModel.find({ businessId, isActive: true }).exec();
+    // todo: move the email sending to a cron job
     const LowInventory = products.filter(
       (p) => p.stockQuantity <= 5,
     );
