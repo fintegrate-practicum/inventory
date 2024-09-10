@@ -10,12 +10,18 @@ import { Product } from './product.entity';
 import { productValidationSchema } from './product.validate';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import axiosInstance from 'src/axios/workerAxios';
+import { Message } from '../interfaces/Message';
+import { RabbitPublisherService } from '../rabbit-publisher/rabbit-publisher.service';
 
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
 
-  constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) { }
+  constructor(
+    @InjectModel(Product.name) private readonly productModel: Model<Product>,
+    private readonly rabbitPublisherService: RabbitPublisherService,
+  ) { }
 
   async getProductById(productId: string): Promise<Product> {
     const product = await this.productModel
@@ -27,6 +33,41 @@ export class ProductService {
 
   async getProductByBusinessId(businessId: string): Promise<Product[]> {
     const products = await this.productModel.find({ businessId, isActive: true }).exec();
+    // todo: move the email sending to a cron job
+    const LowInventory = products.filter(
+      (p) => p.stockQuantity <= 5,
+    );
+
+    if (LowInventory.length > 0) {
+      const adminId = LowInventory[0].adminId;
+
+      try {
+        const admin = await this.getAdmin(adminId);
+        const AdminDetails = await this.getAdminDetails(admin.data.userId)
+        const EmailAdmin = AdminDetails.data.userEmail;
+        const message: Message = {
+          pattern: 'message_exchange',
+          data: {
+            to: EmailAdmin,
+            subject: 'Update on low stock',
+            text: "",
+            type: 'email',
+            kindSubject: 'message',
+            description: LowInventory.map(p => p.name),
+            date: new Date(),
+            managerName: admin.data.nameEmployee,
+          },
+        };
+        try {
+          await this.rabbitPublisherService.publishMessageToCommunication(message);
+        } catch (error) {
+          console.error('Error publishing message to RabbitMQ:', error);
+        }
+      }
+      catch {
+        throw new Error("Admin not found");
+      }
+    }
     return products;
   }
 
@@ -126,6 +167,29 @@ export class ProductService {
       }
     ]);
     return lowStockProducts;
+  }
+
+  
+  private async getAdmin(adminId: string): Promise<any> {
+    try {
+      const response = await axiosInstance.get(
+        `/workers/${adminId}`,
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  private async getAdminDetails(userId: string): Promise<any> {
+    try {
+      const response = await axiosInstance.get(
+        `/user/${userId}`,
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 
